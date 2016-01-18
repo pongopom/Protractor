@@ -12,9 +12,18 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+ let userDefaults = NSUserDefaults.standardUserDefaults()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+        let prefs = NSBundle.mainBundle().pathForResource("Settings", ofType: "plist")
+        let dict = NSDictionary(contentsOfFile: prefs!)
+      //  userDefaults.setObject(dict, forKey: "defaults")                // without this code doesn't work
+        userDefaults.registerDefaults(dict as![String : AnyObject])  // with or without this code works... do I need this?
+       // userDefaults.synchronize()
+        
+        
+        
         // Override point for customization after application launch.
         return true
     }
