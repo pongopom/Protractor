@@ -38,13 +38,13 @@ class AngleView180: UIView {
         circleLayerRed = CAShapeLayer(layer: layer)
         // circleLayerRed.opacity = 0.5
         circleLayerRed!.lineWidth = 1
-        circleLayerRed!.strokeColor = UIColor(red: 1.0, green: 0.2, blue: 0.1, alpha: 1.0).CGColor
-        circleLayerRed!.fillColor = UIColor(red: 1.0, green: 0.2, blue: 0.1, alpha: 0.5).CGColor
+     //   circleLayerRed!.strokeColor = UIColor(red: 1.0, green: 0.2, blue: 0.1, alpha: 1.0).CGColor
+        circleLayerRed!.fillColor = UIColor(red: 1.0, green: 0.2, blue: 0.1, alpha: 0.3).CGColor
         
-        //        circleLayerRed!.shadowColor = UIColor.whiteColor().CGColor
-        //        circleLayerRed!.shadowRadius = 1.0
-        //        circleLayerRed!.shadowOpacity = 0.9
-        //        circleLayerRed!.shadowOffset = CGSize(width: 1, height: 1)
+                circleLayerRed!.shadowColor = UIColor.redColor().CGColor
+                circleLayerRed!.shadowRadius = 6.0
+                circleLayerRed!.shadowOpacity = 0.4
+                circleLayerRed!.shadowOffset = CGSize(width: 0, height: 0)
         
         
         self.layer.addSublayer(circleLayerRed!)
@@ -97,13 +97,13 @@ class AngleView180: UIView {
         circleLayerBlue = CAShapeLayer(layer: layer)
         // circleLayerBlue.opacity = 0.5
         circleLayerBlue!.lineWidth = 1
-        circleLayerBlue!.fillColor = UIColor(red: 0.1, green: 0.1, blue: 1.0, alpha: 0.5).CGColor
-        circleLayerBlue!.strokeColor =  UIColor(red: 0.1, green: 0.1, blue: 1.0, alpha: 1.0).CGColor
+        circleLayerBlue!.fillColor = UIColor(red: 0.1, green: 0.1, blue: 1.0, alpha: 0.3).CGColor
+      //  circleLayerBlue!.strokeColor =  UIColor(red: 0.1, green: 0.1, blue: 1.0, alpha: 1.0).CGColor
         
-        //  circleLayerBlue.shadowColor =  UIColor(red: 1.0, green: 0.2, blue: 0.1, alpha: 1.0).CGColor
-        // circleLayerBlue.shadowRadius = 2.0
-        //   circleLayerBlue.shadowOpacity = 0.9
-        //public  circleLayerBlue.shadowOffset = CGSize(width: 0, height: 0)
+          circleLayerBlue!.shadowColor =  UIColor.blueColor().CGColor
+         circleLayerBlue!.shadowRadius = 6.0
+           circleLayerBlue!.shadowOpacity = 0.4
+          circleLayerBlue!.shadowOffset = CGSize(width: 0, height: 0)
         
         self.layer.addSublayer(circleLayerBlue!)
         //  let center = CGPointMake(bounds.width/2, bounds.height)
@@ -113,7 +113,7 @@ class AngleView180: UIView {
         
         
         piePath2.moveToPoint(center)
-        var angle2: Float =   180    //360.0          //-180.0
+        let angle2: Float =   180    //360.0          //-180.0
         let angleb2: Float = touchedAngle! //* -1.0
         //////////
         

@@ -8,38 +8,64 @@
 
 import UIKit
 
-class OneEightyViewController: UIViewController, UIGestureRecognizerDelegate {
-    @IBOutlet weak var keybutton: UIButton!
-    @IBOutlet weak var lockButton: UIButton!
-
+class OneEightyViewController: UIViewController {
+  
     let nc = NSNotificationCenter.defaultCenter()
-    
-    
-    
+    var fingerRotation: OneFingerRotationGesture!
+   // var proType:String = ""
     
     override func viewDidLoad() {
+        
+        
+        
         super.viewDidLoad()
+        
+        
+       //  self.scaleImageView.image = UIImage(named: "180Iscale")
+      //  self.updateProtractorType()
+        
         print("180 loaded")
-        nc.addObserver(self, selector: "updateTheUI", name: "UpdateTheUI", object: nil)
+       //  let protractorType = (self.userDefaults.valueForKey("ProtractorType") as! String)
+     //   self.proType = protractorType
+        nc.addObserver(self, selector: #selector(OneEightyViewController.updateTheUI), name: "UpdateTheUI", object: nil)
+        nc.addObserver(self, selector: #selector(OneEightyViewController.updateProtractorType), name: "UpdateProtractorType", object: nil)
         
         
-         let center = CGPointMake(self.view.bounds.width/2 , self.view.bounds.height - 25)
-        let ges = OneFingerRotationGesture(midPoint: center, target: self, action: "rotateGesture:")
-       // self.view.addGestureRecognizer(OneFingerRotationGesture(midPoint: center, target: self, action: "rotateGesture:"))
-        
-       self.view.addGestureRecognizer(ges)
-        ges.delegate = self
+        let center = CGPointMake(self.view.bounds.width/2 , self.view.bounds.height - 25)
+        self.fingerRotation = OneFingerRotationGesture(midPoint: center, target: self, action: #selector(OneEightyViewController.rotateGesture(_:)))
+        self.view.addGestureRecognizer(self.fingerRotation)
         self.updateTheUI()
+        self.updateProtractorType()
+        self.angleReadOut = 270
     }
-    
     
      let userDefaults = NSUserDefaults.standardUserDefaults()
     
     func updateTheUI(){
       print("time to update the UI")
+        // self.scaleImageView.image = UIImage(named: "rad180")
        let hideScale = (self.userDefaults.valueForKey("HideScale") as! Bool)
        let hideAngle = (self.userDefaults.valueForKey("HideAngle") as! Bool)
-        // let hideScale = (self.userDefaults.valueForKey("HideScale") as! Bool)
+       let hideAngleType = (self.userDefaults.valueForKey("HideAngleType") as! Bool)
+        
+        if (hideAngleType == true){
+            self.redTypeLabel.hidden = true
+            self.blueTypeLabel.hidden = true
+        }
+        else {
+            if(hideScale == false){
+                self.redTypeLabel.hidden = false
+                self.blueTypeLabel.hidden = false
+            }
+            else{
+            
+            self.redTypeLabel.hidden = true
+            self.blueTypeLabel.hidden = true
+            }
+        }
+        
+        
+        
             if (hideScale == true){
                 self.scaleImageView.hidden = true
             }
@@ -48,35 +74,65 @@ class OneEightyViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         if (hideAngle == true){
             self.angleView.hidden = true
+            self.redTypeLabel.hidden = true
+            self.redLabel.hidden = true
+            self.blueLabel.hidden = true
+            self.blueTypeLabel.hidden = true
+            self.fingerRotation.enabled = false
         }
         else {
             self.angleView.hidden = false
+            
+            self.redLabel.hidden = false
+            self.blueLabel.hidden = false
+            
+            self.fingerRotation.enabled = true
+            
+             if (hideAngleType == true){
+               self.blueTypeLabel.hidden = true
+                self.redTypeLabel.hidden = true
+            }
+             else{
+               self.blueTypeLabel.hidden = false
+               self.redTypeLabel.hidden = false
+            }
+            
+        }
+    }
+    
+    var protractor: String!
+    
+    func updateProtractorType(){
+        let protractorType = (self.userDefaults.valueForKey("ProtractorType") as! String)
+      self.protractor = protractorType
+        print("protractor type update")
+        if (protractorType == "Per"){
+         self.scaleImageView.image = UIImage(named: "per180")
+          
         }
         
-        
-        
-        
-    }
-    
-    
-    
-    
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
-        if touch.view == self.lockButton
-        || touch.view == self.keybutton{
-            return false
+        else if (protractorType == "Rad"){
+           self.scaleImageView.image = UIImage(named: "rad180")
         }
         
-        return true
+        else {
+            self.scaleImageView.image = UIImage(named: "180Iscale")
+            
+        }
+     self.updateProtractorLabels(Float(angleReadOut))
     }
     
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(true)
-        print("180 will appear")
-         self.view.layoutSubviews()
-    }
-   
+    
+    
+    
+    
+//    override func viewWillAppear(animated: Bool) {
+//        super.viewWillAppear(true)
+//        print("180 will appear")
+//        self.angleReadOut = 270
+//         self.view.layoutSubviews()
+//    }
     
     //MARK: Handle rotation methods
     var currentValue:CGFloat = 0.0 {
@@ -94,11 +150,11 @@ class OneEightyViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var blueLabel: UILabel!
     @IBOutlet weak var redLabel: UILabel!
     @IBOutlet weak var scaleImageView: UIImageView!
-    
+    @IBOutlet weak var blueTypeLabel: UILabel!
+    @IBOutlet weak var redTypeLabel: UILabel!
     
     var angleReadOut: CGFloat = 0.0{
         didSet {
-         // angleReadOut = angleReadOut - 180
             if angleReadOut < 90.0 && angleReadOut >= 0 {
                 angleReadOut = 360
             }
@@ -106,24 +162,106 @@ class OneEightyViewController: UIViewController, UIGestureRecognizerDelegate {
             if angleReadOut >= 90 && angleReadOut < 180 {
                 angleReadOut = 180.0
             }
-            
-            print("|angle is \(angleReadOut)")
-            
-            
-            angleView.setTheAngle(Float(angleReadOut))
-            
-              let angle2 = 360.0 - angleReadOut
-            
-              blueLabel.text = String(format:"%.0f%", Float(angleReadOut)) + "˚"
-             redLabel.text = String(format:"%.0f%", Float(angle2)) + "˚"
+//            print("|angle is \(angleReadOut)")
+//            angleView.setTheAngle(Float(angleReadOut))
+//            let angle2 = 360.0 - angleReadOut
+//            
+//            
+////            redTypeLabel.text = typeOfAngleFor(Float(angle2))
+////            blueTypeLabel.text = typeOfAngleFor(Float(angleReadOut ) - 180.0)
+////            blueLabel.text = String(format:"%.0f%", Float(angleReadOut) - 180.0) + "˚"
+////            redLabel.text = String(format:"%.0f%", Float(angle2)) + "˚"
+//            
+//           //new stuff
+//        // let protractorType = (self.userDefaults.valueForKey("ProtractorType") as! String)
+//         let π = Float(M_PI)
+//        //  let p = 180/
+//            if (protractor == "Per"){
+//                
+//                blueLabel.text = String(format:"%.1f%", (Float(angleReadOut) - 180.0)/360*100          ) + "%"
+//                redLabel.text = String(format:"%.0f%", Float(angle2)) + "˚"
+//                
+//            }
+//                
+//            else if (protractor == "Rad"){
+//                blueLabel.text = String(format:"%.2f%", (Float(angle2) * π/180.0)) + "˚"
+//                redLabel.text = String(format:"%.2f%", (Float(angle2) * π/180.0)) + " rad"
+//                
+//                
+//                
+//            }
+//                
+//            else {
+//                redTypeLabel.text = typeOfAngleFor(Float(angle2))
+//                blueTypeLabel.text = typeOfAngleFor(Float(angleReadOut ) - 180.0)
+//                blueLabel.text = String(format:"%.0f%", Float(angleReadOut) - 180.0) + "˚"
+//                redLabel.text = String(format:"%.0f%", Float(angle2)) + "˚"
+//                
+//            }
+            self.updateProtractorLabels(Float(angleReadOut))
+         //new stuff end
         }
     }
     
     
+    func updateProtractorLabels(angle: Float){
+        print("|angle is \(angle)")
+        angleView.setTheAngle(angle)
+        let angle2 = 360.0 - angle
+        
+        
+                    redTypeLabel.text = typeOfAngleFor(Float(angle2))
+                   blueTypeLabel.text = typeOfAngleFor(Float(angleReadOut ) - 180.0)
+        //            blueLabel.text = String(format:"%.0f%", Float(angleReadOut) - 180.0) + "˚"
+        //            redLabel.text = String(format:"%.0f%", Float(angle2)) + "˚"
+        
+        //new stuff
+        // let protractorType = (self.userDefaults.valueForKey("ProtractorType") as! String)
+        let π = Float(M_PI)
+        //  let p = 180/
+        if (protractor == "Per"){
+            
+            blueLabel.text = String(format:"%.1f%", (Float(angle) - 180.0)/360*100) + "%"
+            redLabel.text = String(format:"%.1f%", (Float(angle2))/360*100) + "%"
+            
+        }
+            
+        else if (protractor == "Rad"){
+            blueLabel.text = ""
+            redLabel.text = String(format:"%.2f%", (Float(angle2) * π/180.0)) + " rad"
+            
+            
+            
+        }
+            
+        else {
+           // redTypeLabel.text = typeOfAngleFor(Float(angle2))
+           // blueTypeLabel.text = typeOfAngleFor(Float(angle ) - 180.0)
+            blueLabel.text = String(format:"%.0f%", Float(angle) - 180.0) + "˚"
+            redLabel.text = String(format:"%.0f%", Float(angle2)) + "˚"
+            
+        }
+        
+        //new stuff end
     
     
-    func rotateGesture(recognizer:OneFingerRotationGesture)
-    {
+    
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    func rotateGesture(recognizer:OneFingerRotationGesture) {
         
         // feedbackLabel.text = ""
         
@@ -145,7 +283,5 @@ class OneEightyViewController: UIViewController, UIGestureRecognizerDelegate {
         //          //  feedbackLabel.text = feedbackLabel.text! + "\n" + String(format:"Distance: %.0f%", Float(distance))
         //        }
     }
-    
-    
     
 }

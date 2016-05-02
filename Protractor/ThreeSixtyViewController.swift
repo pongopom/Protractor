@@ -7,70 +7,110 @@
 //
 
 import UIKit
-import AVFoundation
+//import AVFoundation
 class ThreeSixtyViewController: UIViewController {
 
-    
-    
+    let nc = NSNotificationCenter.defaultCenter()
     @IBOutlet weak var blueLabel: UILabel!
     @IBOutlet weak var redLabel: UILabel!
-    
+    @IBOutlet weak var redTypeLabel: UILabel!
+    @IBOutlet weak var blueTypeLabel: UILabel!
+    @IBOutlet weak var scaleImageView: UIImageView!
+    @IBOutlet weak var angleView: AngleView!
+     var fingerRotation: OneFingerRotationGesture!
     
     //MARK: View Controller override methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addGestureRecognizer(OneFingerRotationGesture(midPoint: self.view.center, target: self, action: "rotateGesture:"))
+        self.fingerRotation = OneFingerRotationGesture(midPoint: self.view.center, target: self, action: #selector(ThreeSixtyViewController.rotateGesture(_:)))
+        self.view.addGestureRecognizer(self.fingerRotation)
+        nc.addObserver(self, selector: #selector(ThreeSixtyViewController.updateTheUI), name: "UpdateTheUI", object: nil)
+          nc.addObserver(self, selector: #selector(ThreeSixtyViewController.updateProtractorType), name: "UpdateProtractorType", object: nil)
+        self.updateTheUI()
+         self.updateProtractorType()
+        self.angleReadOut = 270
+    }
+    
+    let userDefaults = NSUserDefaults.standardUserDefaults()
+   
+    func updateTheUI(){
+        print("time to update the UI")
+        let hideScale = (self.userDefaults.valueForKey("HideScale") as! Bool)
+        let hideAngle = (self.userDefaults.valueForKey("HideAngle") as! Bool)
+        let hideAngleType = (self.userDefaults.valueForKey("HideAngleType") as! Bool)
         
-//                captureSession.sessionPreset = AVCaptureSessionPresetLow
-//                let devices = AVCaptureDevice.devices()
-//                print(devices)
-//                // Loop through all the capture devices on this phone
-//                for device in devices {
-//                    // Make sure this particular device supports video
-//                    if (device.hasMediaType(AVMediaTypeVideo)) {
-//                        // Finally check the position and confirm we've got the back camera
-//                        if(device.position == AVCaptureDevicePosition.Back) {
-//                            captureDevice = device as? AVCaptureDevice
-//                        }
-//                    }
-//                }
-//                if captureDevice != nil {
-//                    beginSession()
-//                }
+        if (hideAngleType == true){
+            self.redTypeLabel.hidden = true
+            self.blueTypeLabel.hidden = true
+        }
+        else {
+            if(hideScale == false){
+                self.redTypeLabel.hidden = false
+                self.blueTypeLabel.hidden = false
+            }
+            else{
+                
+                self.redTypeLabel.hidden = true
+                self.blueTypeLabel.hidden = true
+            }
+        }
+        
+        if (hideScale == true){
+            self.scaleImageView.hidden = true
+        }
+        else {
+            self.scaleImageView.hidden = false
+        }
+        if (hideAngle == true){
+            self.angleView.hidden = true
+            self.redTypeLabel.hidden = true
+            self.redLabel.hidden = true
+            self.blueLabel.hidden = true
+            self.blueTypeLabel.hidden = true
+           self.fingerRotation.enabled = false
+        }
+        else {
+            self.angleView.hidden = false
+           // self.redTypeLabel.hidden = false
+            self.redLabel.hidden = false
+            self.blueLabel.hidden = false
+          //  self.blueTypeLabel.hidden = false
+            self.fingerRotation.enabled = true
+            
+            
+            if (hideAngleType == true){
+                self.blueTypeLabel.hidden = true
+                self.redTypeLabel.hidden = true
+            }
+            else{
+                self.blueTypeLabel.hidden = false
+                self.redTypeLabel.hidden = false
+            }
+            
+        }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    var protractor: String!
+    
+    func updateProtractorType(){
+        let protractorType = (self.userDefaults.valueForKey("ProtractorType") as! String)
+        self.protractor = protractorType
+        print("protractor type update")
+        if (protractorType == "Per"){
+            self.scaleImageView.image = UIImage(named: "per360")
+            
+        }
+            
+        else if (protractorType == "Rad"){
+            self.scaleImageView.image = UIImage(named: "rad360")
+        }
+            
+        else {
+            self.scaleImageView.image = UIImage(named: "deg360")
+            
+        }
+        self.updateProtractorLabels(Float(angleReadOut))
     }
-    
-    //MARK: Handle camera methods
-    
-//        @IBOutlet weak var cameraView: UIView!
-//    
-//    
-//       let captureSession = AVCaptureSession()
-//        var captureDevice : AVCaptureDevice?
-//        func beginSession() {
-//            let input   : AVCaptureDeviceInput?
-//            do {
-//                input = try AVCaptureDeviceInput(device: captureDevice)
-//                captureSession.addInput(input)
-//    
-//    
-//            } catch _ {
-//                print("Unable to find camera")
-//            }
-//          //  captureSession.addInput(input)
-//    
-//          let  previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-//            self.cameraView.layer.addSublayer(previewLayer)
-//            previewLayer?.frame = self.view.layer.frame
-//            captureSession.startRunning()
-//        }
-    
-    
-    
     
     
     //MARK: Handle rotation methods
@@ -85,25 +125,42 @@ class ThreeSixtyViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var angleView: AngleView!
-    
     
     var angleReadOut: CGFloat = 0.0{
         didSet {
-            angleReadOut = angleReadOut - 180
-            if angleReadOut <= 0.0 {
-                angleReadOut = angleReadOut + 360
-            }
-            print("|angle is \(angleReadOut)")
-            
-          //  let angle2 = 360.0 - angleReadOut
-            
-          //  blueLabel.text = String(format:"%.0f%", Float(angleReadOut))
-           // redLabel.text = String(format:"%.0f%", Float(angle2))
+            print("|angle is \(360 - angleReadOut )")
+            angleView.setTheAngle(Float(angleReadOut))
+            let angle2 = 360.0 - angleReadOut
+            redTypeLabel.text = typeOfAngleFor(Float(angle2))
+            blueTypeLabel.text = typeOfAngleFor(Float(angleReadOut * -1))
+           // blueLabel.text = String(format:"%.0f%", Float(angleReadOut * -1)) + "˚"
+           // redLabel.text = String(format:"%.0f%", Float(angle2)) + "˚"
+             self.updateProtractorLabels(Float(angleReadOut))
         }
     }
     
     
+    func updateProtractorLabels(angle: Float){
+        print("|angle is \(angle)")
+        angleView.setTheAngle(angle)
+        let angle2 = 360.0 - angle
+        let π = Float(M_PI)
+       
+        if (protractor == "Per"){
+            blueLabel.text = String(format:"%.1f%", (Float(angle))/360*100) + "%"
+            redLabel.text = String(format:"%.1f%", (Float(angle2))/360*100) + "%"
+        }
+            
+        else if (protractor == "Rad"){
+            blueLabel.text = ""
+            redLabel.text = String(format:"%.2f%", (Float(angle2) * π/180.0)) + " rad"
+        }
+            
+        else {
+             blueLabel.text = String(format:"%.0f%", Float(angleReadOut * -1)) + "˚"
+            redLabel.text = String(format:"%.0f%", Float(angle2)) + "˚"
+        }
+    }
     
     
     func rotateGesture(recognizer:OneFingerRotationGesture)
@@ -120,8 +177,8 @@ class ThreeSixtyViewController: UIViewController {
             //  feedbackLabel.text = feedbackLabel.text! + "\n" + String(format:"Angle: %.2f%", Float(angle.degrees))
             self.angleReadOut = angle.degrees
             
-            //    print("|angle is \(angle.degrees - 180)")
-            angleView.setTheAngle(Float(angle.degrees))
+              //  print("|angle is \( angle.degrees )")
+            
             //  self.view.layoutSubviews()
         }
         

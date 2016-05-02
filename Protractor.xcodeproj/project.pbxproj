@@ -7,31 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6305A63D1C76E30800D65893 /* ShopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6305A63C1C76E30800D65893 /* ShopViewController.swift */; };
 		6363EF151BE9DBB600D7BC01 /* OneEightyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6363EF141BE9DBB600D7BC01 /* OneEightyViewController.swift */; };
 		6363EF171BE9DBFD00D7BC01 /* ThreeSixtyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6363EF161BE9DBFD00D7BC01 /* ThreeSixtyViewController.swift */; };
-		6363EF191BEA504100D7BC01 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6363EF181BEA504100D7BC01 /* iAd.framework */; };
 		63673C301BF0F2B2002B31CF /* OneFingerRotationGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63673C2F1BF0F2B2002B31CF /* OneFingerRotationGesture.swift */; };
 		63673C321BF0F2F8002B31CF /* AngleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63673C311BF0F2F8002B31CF /* AngleView.swift */; };
 		6370E3DF1BF3117900FD7C4D /* AngleView180.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6370E3DE1BF3117900FD7C4D /* AngleView180.swift */; };
 		637601C61C3B91FF009891BE /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637601C51C3B91FF009891BE /* SettingsViewController.swift */; };
 		637692F71C3E3F8200CD6B31 /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 637692F61C3E3F8200CD6B31 /* Settings.plist */; };
+		638584511C578CDA00C4D55A /* AngleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638584501C578CDA00C4D55A /* AngleType.swift */; };
 		63859C201BE893CF00367460 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63859C1F1BE893CF00367460 /* AppDelegate.swift */; };
 		63859C251BE893CF00367460 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63859C231BE893CF00367460 /* Main.storyboard */; };
 		63859C271BE893CF00367460 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63859C261BE893CF00367460 /* Assets.xcassets */; };
 		63859C2A1BE893CF00367460 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63859C281BE893CF00367460 /* LaunchScreen.storyboard */; };
 		63859C321BE894CB00367460 /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63859C311BE894CB00367460 /* NavigationViewController.swift */; };
 		63990F551C42276E00D043B6 /* KeyPadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63990F541C42276E00D043B6 /* KeyPadViewController.swift */; };
+		63CD749C1C72DCE2004D7DFC /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63CD749B1C72DCE2004D7DFC /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6305A63C1C76E30800D65893 /* ShopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopViewController.swift; sourceTree = "<group>"; };
 		6363EF141BE9DBB600D7BC01 /* OneEightyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneEightyViewController.swift; sourceTree = "<group>"; };
 		6363EF161BE9DBFD00D7BC01 /* ThreeSixtyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreeSixtyViewController.swift; sourceTree = "<group>"; };
-		6363EF181BEA504100D7BC01 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		63673C2F1BF0F2B2002B31CF /* OneFingerRotationGesture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneFingerRotationGesture.swift; sourceTree = "<group>"; };
 		63673C311BF0F2F8002B31CF /* AngleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AngleView.swift; sourceTree = "<group>"; };
 		6370E3DE1BF3117900FD7C4D /* AngleView180.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AngleView180.swift; sourceTree = "<group>"; };
 		637601C51C3B91FF009891BE /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		637692F61C3E3F8200CD6B31 /* Settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Settings.plist; sourceTree = "<group>"; };
+		638584501C578CDA00C4D55A /* AngleType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AngleType.swift; sourceTree = "<group>"; };
 		63859C1C1BE893CF00367460 /* Protractor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Protractor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63859C1F1BE893CF00367460 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		63859C241BE893CF00367460 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -40,6 +43,7 @@
 		63859C2B1BE893CF00367460 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63859C311BE894CB00367460 /* NavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		63990F541C42276E00D043B6 /* KeyPadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyPadViewController.swift; sourceTree = "<group>"; };
+		63CD749B1C72DCE2004D7DFC /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6363EF191BEA504100D7BC01 /* iAd.framework in Frameworks */,
+				63CD749C1C72DCE2004D7DFC /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,7 +61,7 @@
 		63859C131BE893CF00367460 = {
 			isa = PBXGroup;
 			children = (
-				6363EF181BEA504100D7BC01 /* iAd.framework */,
+				63CD749B1C72DCE2004D7DFC /* StoreKit.framework */,
 				63859C1E1BE893CF00367460 /* Protractor */,
 				63859C1D1BE893CF00367460 /* Products */,
 			);
@@ -80,6 +84,7 @@
 				6370E3DE1BF3117900FD7C4D /* AngleView180.swift */,
 				63673C2F1BF0F2B2002B31CF /* OneFingerRotationGesture.swift */,
 				63859C311BE894CB00367460 /* NavigationViewController.swift */,
+				6305A63C1C76E30800D65893 /* ShopViewController.swift */,
 				63673C311BF0F2F8002B31CF /* AngleView.swift */,
 				6363EF141BE9DBB600D7BC01 /* OneEightyViewController.swift */,
 				6363EF161BE9DBFD00D7BC01 /* ThreeSixtyViewController.swift */,
@@ -88,6 +93,7 @@
 				63859C2B1BE893CF00367460 /* Info.plist */,
 				637601C51C3B91FF009891BE /* SettingsViewController.swift */,
 				63990F541C42276E00D043B6 /* KeyPadViewController.swift */,
+				638584501C578CDA00C4D55A /* AngleType.swift */,
 			);
 			path = Protractor;
 			sourceTree = "<group>";
@@ -125,6 +131,11 @@
 					63859C1B1BE893CF00367460 = {
 						CreatedOnToolsVersion = 7.1;
 						DevelopmentTeam = Z4YXE63R92;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -167,9 +178,11 @@
 			files = (
 				6363EF151BE9DBB600D7BC01 /* OneEightyViewController.swift in Sources */,
 				6363EF171BE9DBFD00D7BC01 /* ThreeSixtyViewController.swift in Sources */,
+				6305A63D1C76E30800D65893 /* ShopViewController.swift in Sources */,
 				63673C321BF0F2F8002B31CF /* AngleView.swift in Sources */,
 				6370E3DF1BF3117900FD7C4D /* AngleView180.swift in Sources */,
 				63673C301BF0F2B2002B31CF /* OneFingerRotationGesture.swift in Sources */,
+				638584511C578CDA00C4D55A /* AngleType.swift in Sources */,
 				63859C321BE894CB00367460 /* NavigationViewController.swift in Sources */,
 				63990F551C42276E00D043B6 /* KeyPadViewController.swift in Sources */,
 				63859C201BE893CF00367460 /* AppDelegate.swift in Sources */,
@@ -287,10 +300,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Protractor/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = pongosoft.Protractor;
+				PRODUCT_BUNDLE_IDENTIFIER = uk.co.pongosoft.Protractor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -300,10 +315,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Protractor/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = pongosoft.Protractor;
+				PRODUCT_BUNDLE_IDENTIFIER = uk.co.pongosoft.Protractor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
