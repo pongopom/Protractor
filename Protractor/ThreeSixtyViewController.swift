@@ -144,6 +144,13 @@ class ThreeSixtyViewController: UIViewController {
         print("|angle is \(angle)")
         angleView.setTheAngle(angle)
         let angle2 = 360.0 - angle
+        
+        var anglev = Float(angleReadOut * -1)
+        if anglev > -0.5{
+            anglev = 0
+        }
+        
+        
         let π = Float(M_PI)
        
         if (protractor == "Per"){
@@ -157,7 +164,7 @@ class ThreeSixtyViewController: UIViewController {
         }
             
         else {
-             blueLabel.text = String(format:"%.0f%", Float(angleReadOut * -1)) + "˚"
+             blueLabel.text = String(format:"%.0f%", anglev) + "˚"
             redLabel.text = String(format:"%.0f%", Float(angle2)) + "˚"
         }
     }

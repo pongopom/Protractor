@@ -178,9 +178,9 @@ class AngleView180: UIView {
         //   pointerPath.addLineToPoint(CGPointMake(center2.x  + (radius )  * CGFloat(c1), center2.y + (radius) * CGFloat(b1)))
         //
         pointerPath.moveToPoint(center2)
-        pointerPath.addLineToPoint(CGPointMake(center2.x  + (radius + 500 )  * CGFloat(d1), center2.y + (radius + 500 ) * CGFloat(e1)))
+       // pointerPath.addLineToPoint(CGPointMake(center2.x  + (radius + 500 )  * CGFloat(d1), center2.y + (radius + 500 ) * CGFloat(e1)))
         
-        
+            pointerPath.addLineToPoint(CGPointMake(center2.x  + ( self.superview!.bounds.size.width )  * CGFloat(d1), center2.y + ( self.superview!.bounds.size.width ) * CGFloat(e1)))
         pointerLayer!.path = pointerPath.CGPath
         
         

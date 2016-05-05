@@ -11,6 +11,7 @@ import  UIKit
 
 protocol SettingsViewControllerDelegate{
     func updateView()
+    func showHideGuideLine()
 }
 
 
@@ -161,10 +162,13 @@ class SettingsViewController: UITableViewController {
     @IBAction func showHideHorizonGuide(sender: UISwitch) {
         if sender.on == true{
             print("horizon on")
+            self.userDefaults.setBool(false, forKey: "HideHorizon")
         }
         else{
             print("horizon off")
+             self.userDefaults.setBool(true, forKey: "HideHorizon")
         }
+        self.delegate.showHideGuideLine()
     }
 
     

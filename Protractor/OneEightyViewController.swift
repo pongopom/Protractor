@@ -30,8 +30,14 @@ class OneEightyViewController: UIViewController {
         nc.addObserver(self, selector: #selector(OneEightyViewController.updateTheUI), name: "UpdateTheUI", object: nil)
         nc.addObserver(self, selector: #selector(OneEightyViewController.updateProtractorType), name: "UpdateProtractorType", object: nil)
         
+        var viewOffSet: CGFloat = 26.0
+       if (self.view.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClass.Regular) {
         
-        let center = CGPointMake(self.view.bounds.width/2 , self.view.bounds.height - 25)
+       viewOffSet = 30.0
+        
+        }
+        
+        let center = CGPointMake(self.view.bounds.width/2 , self.view.bounds.height - viewOffSet)
         self.fingerRotation = OneFingerRotationGesture(midPoint: center, target: self, action: #selector(OneEightyViewController.rotateGesture(_:)))
         self.view.addGestureRecognizer(self.fingerRotation)
         self.updateTheUI()

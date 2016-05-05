@@ -152,87 +152,126 @@ class NavigationViewController: UIViewController
         let threeSixtyViewController = storyboard.instantiateViewControllerWithIdentifier("360VC")
         self.threeSixtyViewController = threeSixtyViewController as? ThreeSixtyViewController
         self.loadInitialViewControllerWithName("180VC")
-        if manager.deviceMotionAvailable {
-            let queue = NSOperationQueue()
-            manager.deviceMotionUpdateInterval = 0.01
-            manager.startDeviceMotionUpdatesToQueue(queue) {
-                 (data: CMDeviceMotion?, error: NSError?) in
-            let rotation = atan2(data!.gravity.y, data!.gravity.x) * -1
-                
-           //   let phoneAngle = atan2(data!.gravity.z, data!.gravity.x) * -1
-             //  print(phoneAngle)
-                
-            NSOperationQueue.mainQueue().addOperationWithBlock {
-                
-              print(data?.attitude.roll)
-              
-                
-                if data?.attitude.roll < -0.3 || data?.attitude.roll > 0.3{
-                    
-                    print("Bingo")
-                    
-                                            self.line.hidden = false
-                                            print(rotation)
-                                        }
-                                        else{
-                                          self.line.hidden = true
-                                        }
-                                        
-                                     //  print("bingo")
-                                        
-                
-                
-                
-                
-                
-                
-                
-//                if phoneAngle < -0.5 || phoneAngle > 0.5 {
-//                    if rotation < -1.3 || rotation > 1.3{
-//                        self.line.hidden = true
-//                        print(rotation)
-//                    }
-//                    else{
-//                      self.line.hidden = false
-//                    }
-//                    
-//                 //  print("bingo")
-//                    
-//                }
-//                else{
-//                    self.line.hidden = false
-//                }
-                
-                self.line.transform = CGAffineTransformMakeRotation(CGFloat(rotation))
-                if rotation < 0.01 && rotation > -0.01{
-                if rotation < 0.003 && rotation > -0.003{
-                    self.line.backgroundColor = UIColor.greenColor()
-                    }
-              else{
-                self.line.backgroundColor = UIColor.orangeColor()
-                    }
-                }
-                else{
-                    self.line.backgroundColor = UIColor.redColor()
-                }
-                }
-            }
-        }
-        
-        
-        
-        
-        
+
         hasMakePurchase = false
         if hasMakePurchase == false{
 //   self.loadTheAdBanner()
         }
+        
+        
+        let showGuide = self.userDefaults.valueForKey("HideHorizon") as! Bool
+        
+        if showGuide == true{
+           self.line.hidden = true
+        }
+        else {
+            self.line.hidden = false
+            self.startHorizontalGuide()
+        }
+        
+        
+        
+        
         
         self.updateScaleTypeButtonImage()
          self.storeButton.enabled = false
         self.loadInAppPurchases()
         
     }
+    
+    func showHideGuideLine(){
+        let showGuide = self.userDefaults.valueForKey("HideHorizon") as! Bool
+        
+        if showGuide == true{
+           
+            
+            if manager.deviceMotionActive {
+                
+                manager.stopDeviceMotionUpdates()
+            }
+           self.line.hidden = true 
+        }
+        else {
+            
+            self.line.hidden = false
+            self.startHorizontalGuide()
+            
+            
+           
+        }
+       //  self.line.hidden = true
+    }
+    
+    
+    func startHorizontalGuide(){
+    //    let showGuide = self.userDefaults.valueForKey("HideHorizon") as! Bool
+      
+        
+        
+        if manager.deviceMotionAvailable {
+            let queue = NSOperationQueue()
+            manager.deviceMotionUpdateInterval = 0.01
+            manager.startDeviceMotionUpdatesToQueue(queue) {
+                (data: CMDeviceMotion?, error: NSError?) in
+                let rotation = atan2(data!.gravity.y, data!.gravity.x) * -1
+                
+                //   let phoneAngle = atan2(data!.gravity.z, data!.gravity.x) * -1
+                //  print(phoneAngle)
+                
+                NSOperationQueue.mainQueue().addOperationWithBlock {
+                     print("roll")
+                    print(data?.attitude.roll)
+                    
+                    
+                    print("pitch")
+                    print(data?.attitude.pitch)
+                    
+                    
+                    
+                    
+                    if data?.attitude.roll < -0.5 || data?.attitude.roll > 0.5{
+                      
+                       
+                        
+                        print("Bingo")
+                        //  if showGuide == false {
+                      //  self.line.hidden = false
+                        
+                        self.line.alpha = 1
+                        
+                       // print(rotation)
+                       // }
+                    }
+                    else{
+                         if data!.attitude.pitch < 1 && data!.attitude.pitch > -1 {
+                         self.line.alpha = 0
+                       /// self.line.hidden = true
+                        }
+                    }
+                    
+                    
+                    self.line.transform = CGAffineTransformMakeRotation(CGFloat(rotation))
+                    if rotation < 0.01 && rotation > -0.01{
+                        if rotation < 0.003 && rotation > -0.003{
+                            self.line.backgroundColor = UIColor.greenColor()
+                        }
+                        else{
+                            self.line.backgroundColor = UIColor.orangeColor()
+                        }
+                    }
+                    else{
+                        self.line.backgroundColor = UIColor.redColor()
+                    }
+                }
+            }
+        }
+        
+        
+    }
+    
+    
+    
+    
     
     var loadedViewControllerName: String?
     
@@ -323,7 +362,7 @@ class NavigationViewController: UIViewController
                     // move the h line
                     self.positionHorizonLineFor(self.loadedViewControllerName!)
                     sender.enabled = true
-                    sender.setImage(Image180, forState: UIControlState.Normal)
+                    sender.setImage(Image360, forState: UIControlState.Normal)
             })
         }
         else {
@@ -339,7 +378,7 @@ class NavigationViewController: UIViewController
                     //move the h line
                     self.positionHorizonLineFor(self.loadedViewControllerName!)
                     sender.enabled = true
-                     sender.setImage(Image360, forState: UIControlState.Normal)
+                     sender.setImage(Image180, forState: UIControlState.Normal)
             })
         }
     }
@@ -510,7 +549,7 @@ class NavigationViewController: UIViewController
         }
         
         if (segue.identifier == "Shop") {
-            manager.stopDeviceMotionUpdates()
+           
             let nav = segue.destinationViewController as! UINavigationController
             let vc = (nav.viewControllers[0] as! ShopViewController)
             vc.pTitle = self.productTitle
