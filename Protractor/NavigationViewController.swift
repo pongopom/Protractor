@@ -11,10 +11,11 @@ import AVFoundation
 import CoreMotion
 
 class NavigationViewController: UIViewController
- , SettingsViewControllerDelegate, SKProductsRequestDelegate, SKPaymentTransactionObserver {
+, SettingsViewControllerDelegate, UpgradeTableviewControllerDelegate, SKProductsRequestDelegate, SKPaymentTransactionObserver {
     
     let nc = NSNotificationCenter.defaultCenter()
-   
+    let helper = StoreManager.sharedInstance
+    var showStoreView = "failed"
     
     //settings delegate method
     func updateView() {
@@ -26,7 +27,8 @@ class NavigationViewController: UIViewController
     let userDefaults = NSUserDefaults.standardUserDefaults()
     
     @IBAction func changeScaleType(sender: UIButton) {
-     //   var protractorType = (self.userDefaults.valueForKey("ProtractorType") as! String)
+        
+        //   var protractorType = (self.userDefaults.valueForKey("ProtractorType") as! String)
         
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         
@@ -40,16 +42,16 @@ class NavigationViewController: UIViewController
             
             self.userDefaults.setObject("Deg", forKey: "ProtractorType")
             self.nc.postNotificationName("UpdateProtractorType", object: nil)
-             sender.setImage(UIImage(named: "degButton"), forState: UIControlState.Normal)
+            sender.setImage(UIImage(named: "degButton"), forState: UIControlState.Normal)
         }
         
         
         let percentage: UIAlertAction = UIAlertAction(title: "Percentage", style: .Default)
         { action -> Void in
             
-           self.userDefaults.setObject("Per", forKey: "ProtractorType")
-           self.nc.postNotificationName("UpdateProtractorType", object: nil)
-           sender.setImage(UIImage(named: "perButton"), forState: UIControlState.Normal)
+            self.userDefaults.setObject("Per", forKey: "ProtractorType")
+            self.nc.postNotificationName("UpdateProtractorType", object: nil)
+            sender.setImage(UIImage(named: "perButton"), forState: UIControlState.Normal)
         }
         
         
@@ -78,31 +80,31 @@ class NavigationViewController: UIViewController
             actionSheetController.addAction(radians)
         }
         
-      
-
+        
+        
         actionSheetController.popoverPresentationController?.sourceView = sender as UIView
         self.presentViewController(actionSheetController, animated: true, completion: nil)
-      actionSheetController.view.layoutIfNeeded()//supress warning
-       
+        actionSheetController.view.layoutIfNeeded()//supress warning
+        
     }
     
     
     @IBOutlet weak var scaleTypeButton: UIButton!
     
     func updateScaleTypeButtonImage (){
-      let scaleType = self.userDefaults.valueForKey("ProtractorType") as! String
+        let scaleType = self.userDefaults.valueForKey("ProtractorType") as! String
         
         if scaleType == "Per"{
-          self.scaleTypeButton.setImage(UIImage(named: "perButton"), forState: UIControlState.Normal)
+            self.scaleTypeButton.setImage(UIImage(named: "perButton"), forState: UIControlState.Normal)
         }
-        
+            
         else if scaleType == "Rad"{
-          self.scaleTypeButton.setImage(UIImage(named: "radButton"), forState: UIControlState.Normal)
+            self.scaleTypeButton.setImage(UIImage(named: "radButton"), forState: UIControlState.Normal)
             
         }
         else{
             
-          self.scaleTypeButton.setImage(UIImage(named: "degButton"), forState: UIControlState.Normal)
+            self.scaleTypeButton.setImage(UIImage(named: "degButton"), forState: UIControlState.Normal)
         }
         
     }
@@ -115,7 +117,7 @@ class NavigationViewController: UIViewController
     var oneEightyViewController: OneEightyViewController?
     var threeSixtyViewController: ThreeSixtyViewController?
     var hasMakePurchase: Bool?
-
+    
     
     @IBOutlet weak var vCContainer: UIView!
     var viewsDictionary: NSDictionary!
@@ -123,21 +125,24 @@ class NavigationViewController: UIViewController
     var bottomConstraint: NSLayoutConstraint?
     var leadConstraint: NSLayoutConstraint?
     var trailConstraint: NSLayoutConstraint?
-
-//    override func viewWillLayoutSubviews() {
-//          positionHorizonLineFor(self.loadedViewControllerName!)
-//        super.viewWillLayoutSubviews()
-//  
-//    }
-
+    
+    //    override func viewWillLayoutSubviews() {
+    //          positionHorizonLineFor(self.loadedViewControllerName!)
+    //        super.viewWillLayoutSubviews()
+    //
+    //    }
+    
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         positionHorizonLineFor(self.loadedViewControllerName!)
+        ////////for screenshots remove befor shipping
         
+        self.line.transform = CGAffineTransformMakeRotation(CGFloat(0.05))
+        self.line.backgroundColor = UIColor.redColor()
         
-        
-    print(self.userDefaults.valueForKey("ProtractorType") as! String)
+        ///////////
+        print(self.userDefaults.valueForKey("ProtractorType") as! String)
     }
     
     
@@ -152,17 +157,17 @@ class NavigationViewController: UIViewController
         let threeSixtyViewController = storyboard.instantiateViewControllerWithIdentifier("360VC")
         self.threeSixtyViewController = threeSixtyViewController as? ThreeSixtyViewController
         self.loadInitialViewControllerWithName("180VC")
-
+        
         hasMakePurchase = false
         if hasMakePurchase == false{
-//   self.loadTheAdBanner()
+            //   self.loadTheAdBanner()
         }
         
         
         let showGuide = self.userDefaults.valueForKey("HideHorizon") as! Bool
         
         if showGuide == true{
-           self.line.hidden = true
+            self.line.hidden = true
         }
         else {
             self.line.hidden = false
@@ -174,22 +179,38 @@ class NavigationViewController: UIViewController
         
         
         self.updateScaleTypeButtonImage()
-         self.storeButton.enabled = false
-        self.loadInAppPurchases()
+        
+        
+        //////////////
+        
+        self.storeButton.enabled = false
+      //  self.loadInAppPurchases()
+        self.show360Button()
+        self.showScalesButton()
+        
+        
+        //  helper.loadInAppPurchases()
+        ///////////////
         
     }
+    
+    
+    
+    
+    
+    
     
     func showHideGuideLine(){
         let showGuide = self.userDefaults.valueForKey("HideHorizon") as! Bool
         
         if showGuide == true{
-           
+            
             
             if manager.deviceMotionActive {
                 
                 manager.stopDeviceMotionUpdates()
             }
-           self.line.hidden = true 
+            self.line.hidden = true
         }
         else {
             
@@ -197,15 +218,15 @@ class NavigationViewController: UIViewController
             self.startHorizontalGuide()
             
             
-           
+            
         }
-       //  self.line.hidden = true
+        //  self.line.hidden = true
     }
     
     
     func startHorizontalGuide(){
-    //    let showGuide = self.userDefaults.valueForKey("HideHorizon") as! Bool
-      
+        //    let showGuide = self.userDefaults.valueForKey("HideHorizon") as! Bool
+        
         
         
         if manager.deviceMotionAvailable {
@@ -219,7 +240,7 @@ class NavigationViewController: UIViewController
                 //  print(phoneAngle)
                 
                 NSOperationQueue.mainQueue().addOperationWithBlock {
-                     print("roll")
+                    print("roll")
                     print(data?.attitude.roll)
                     
                     
@@ -230,22 +251,22 @@ class NavigationViewController: UIViewController
                     
                     
                     if data?.attitude.roll < -0.5 || data?.attitude.roll > 0.5{
-                      
-                       
+                        
+                        
                         
                         print("Bingo")
                         //  if showGuide == false {
-                      //  self.line.hidden = false
+                        //  self.line.hidden = false
                         
                         self.line.alpha = 1
                         
-                       // print(rotation)
-                       // }
+                        // print(rotation)
+                        // }
                     }
                     else{
-                         if data!.attitude.pitch < 1 && data!.attitude.pitch > -1 {
-                         self.line.alpha = 0
-                       /// self.line.hidden = true
+                        if data!.attitude.pitch < 1 && data!.attitude.pitch > -1 {
+                            self.line.alpha = 0
+                            /// self.line.hidden = true
                         }
                     }
                     
@@ -276,13 +297,13 @@ class NavigationViewController: UIViewController
     var loadedViewControllerName: String?
     
     func loadInitialViewControllerWithName(name: String){
-       if name == "180VC" {
-        self.loadedViewControllerName = name
-        self.addChildViewController(self.oneEightyViewController!)
-        self.oneEightyViewController?.view.frame = self.containerView.frame
-        self.containerView.addSubview((self.oneEightyViewController?.view)!)
-        self.oneEightyViewController?.didMoveToParentViewController(self)
-        print(self.containerView.frame)
+        if name == "180VC" {
+            self.loadedViewControllerName = name
+            self.addChildViewController(self.oneEightyViewController!)
+            self.oneEightyViewController?.view.frame = self.containerView.frame
+            self.containerView.addSubview((self.oneEightyViewController?.view)!)
+            self.oneEightyViewController?.didMoveToParentViewController(self)
+            print(self.containerView.frame)
         }
     }
     
@@ -292,22 +313,22 @@ class NavigationViewController: UIViewController
         if vcName == "180VC"{
             if (self.view.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClass.Regular) {
                 print("we are a 180 prot on an ipad or 6plus")
-//                self.lineToBottom.constant = 25
-//                UIView.animateWithDuration(0.2) {
-//                    self.view.layoutIfNeeded()
-//                }
+                //                self.lineToBottom.constant = 25
+                //                UIView.animateWithDuration(0.2) {
+                //                    self.view.layoutIfNeeded()
+                //                }
                 
-                 self.lineToBottom.constant = 30
+                self.lineToBottom.constant = 30
                 self.view.layoutIfNeeded()
                 
             }
             else {
-               print("we are a 180 prot on an ipone")
-//                self.lineToBottom.constant = 25
-//                UIView.animateWithDuration(0.2) {
-//                    self.view.layoutIfNeeded()
-//                }
-               
+                print("we are a 180 prot on an ipone")
+                //                self.lineToBottom.constant = 25
+                //                UIView.animateWithDuration(0.2) {
+                //                    self.view.layoutIfNeeded()
+                //                }
+                
                 
                 self.lineToBottom.constant = 25
                 self.view.layoutIfNeeded()
@@ -319,25 +340,25 @@ class NavigationViewController: UIViewController
             if (self.view.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClass.Regular) {
                 print("we are a 360 prot on an ipad or 6plus")
                 
-//                self.lineToBottom.constant = self.view.frame.height/2
-//               UIView.animateWithDuration(0.2) {
-//                    self.view.layoutIfNeeded()
-//                }
-               
+                //                self.lineToBottom.constant = self.view.frame.height/2
+                //               UIView.animateWithDuration(0.2) {
+                //                    self.view.layoutIfNeeded()
+                //                }
+                
                 
                 self.lineToBottom.constant = self.view.frame.height/2
-                 self.view.layoutIfNeeded()
+                self.view.layoutIfNeeded()
                 
                 
             }
             else{
-            print("we are a 360 prot on an ipone")
+                print("we are a 360 prot on an ipone")
                 
-//                self.lineToBottom.constant = self.view.frame.height/2
-//                UIView.animateWithDuration(0.2) {
-//                    self.view.layoutIfNeeded()
-//                }
-               
+                //                self.lineToBottom.constant = self.view.frame.height/2
+                //                UIView.animateWithDuration(0.2) {
+                //                    self.view.layoutIfNeeded()
+                //                }
+                
                 
                 self.lineToBottom.constant = self.view.frame.height/2
                 self.view.layoutIfNeeded()
@@ -354,15 +375,15 @@ class NavigationViewController: UIViewController
             self.oneEightyViewController?.willMoveToParentViewController(nil)
             self.addChildViewController(self.threeSixtyViewController!)
             self.transitionFromViewController(self.oneEightyViewController!, toViewController: self.threeSixtyViewController!, duration: 0.2, options:UIViewAnimationOptions.TransitionCrossDissolve,
-                animations: nil,completion: { finished in
-                self.oneEightyViewController!.removeFromParentViewController()
-                self.threeSixtyViewController!.didMoveToParentViewController(self)
-                self.threeSixtyViewController!.view.frame = self.containerView.frame
-                    self.loadedViewControllerName = "360VC"
-                    // move the h line
-                    self.positionHorizonLineFor(self.loadedViewControllerName!)
-                    sender.enabled = true
-                    sender.setImage(Image360, forState: UIControlState.Normal)
+                                              animations: nil,completion: { finished in
+                                                self.oneEightyViewController!.removeFromParentViewController()
+                                                self.threeSixtyViewController!.didMoveToParentViewController(self)
+                                                self.threeSixtyViewController!.view.frame = self.containerView.frame
+                                                self.loadedViewControllerName = "360VC"
+                                                // move the h line
+                                                self.positionHorizonLineFor(self.loadedViewControllerName!)
+                                                sender.enabled = true
+                                                sender.setImage(Image360, forState: UIControlState.Normal)
             })
         }
         else {
@@ -370,21 +391,21 @@ class NavigationViewController: UIViewController
             self.threeSixtyViewController?.willMoveToParentViewController(nil)
             self.addChildViewController(self.oneEightyViewController!)
             self.transitionFromViewController(self.threeSixtyViewController!, toViewController: self.oneEightyViewController!, duration: 0.2, options:UIViewAnimationOptions.TransitionCrossDissolve,
-                animations: nil,completion: { finished in
-                    self.threeSixtyViewController!.removeFromParentViewController()
-                    self.oneEightyViewController!.didMoveToParentViewController(self)
-                    self.oneEightyViewController!.view.frame = self.containerView.frame
-                    self.loadedViewControllerName = "180VC"
-                    //move the h line
-                    self.positionHorizonLineFor(self.loadedViewControllerName!)
-                    sender.enabled = true
-                     sender.setImage(Image180, forState: UIControlState.Normal)
+                                              animations: nil,completion: { finished in
+                                                self.threeSixtyViewController!.removeFromParentViewController()
+                                                self.oneEightyViewController!.didMoveToParentViewController(self)
+                                                self.oneEightyViewController!.view.frame = self.containerView.frame
+                                                self.loadedViewControllerName = "180VC"
+                                                //move the h line
+                                                self.positionHorizonLineFor(self.loadedViewControllerName!)
+                                                sender.enabled = true
+                                                sender.setImage(Image180, forState: UIControlState.Normal)
             })
         }
     }
-
-   //MARK: Camera methods
-        @IBOutlet weak var camView: UIView!
+    
+    //MARK: Camera methods
+    @IBOutlet weak var camView: UIView!
     let captureSession = AVCaptureSession()
     var captureDevice : AVCaptureDevice?
     var  previewLayer: AVCaptureVideoPreviewLayer?
@@ -428,7 +449,7 @@ class NavigationViewController: UIViewController
             }
         }
         if captureDevice != nil {
-              beginSession()
+            beginSession()
         }
             
         else {
@@ -443,17 +464,17 @@ class NavigationViewController: UIViewController
         do {
             input = try AVCaptureDeviceInput(device: captureDevice)
             captureSession.addInput(input)
-             cameraButton.tintColor = UIColor.redColor()
+            cameraButton.tintColor = UIColor.redColor()
             
         } catch _ {
             print("Unable to find camera")
             
             if captureSession.running == true{
                 self.endSession()
-               
+                
             }
-             self.cameraButton.tintColor = self.view.tintColor
-           //:TO DO ADD NOTIFICATION
+            self.cameraButton.tintColor = self.view.tintColor
+            //:TO DO ADD NOTIFICATION
             return
         }
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -488,21 +509,23 @@ class NavigationViewController: UIViewController
     
     
     @IBAction func stop(sender: UIButton) {
+        
+        
         if captureSession.running == true{
-         self.endSession()
+            self.endSession()
         }
         else {
-           print("fire up camera")
+            print("fire up camera")
             checkPermition()
         }
     }
     
     func checkPermition(){
-         if AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo) == AVAuthorizationStatus.Authorized {
+        if AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo) == AVAuthorizationStatus.Authorized {
             self.loadTheCamera()
         }
-         else if
-         AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo) == AVAuthorizationStatus.NotDetermined {
+        else if
+            AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo) == AVAuthorizationStatus.NotDetermined {
             
             AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo, completionHandler: { (videoGranted: Bool) -> Void in
                 
@@ -510,37 +533,41 @@ class NavigationViewController: UIViewController
                 if (videoGranted) {
                     
                     self.loadTheCamera()
-                      print("User tapped  allow")
+                    print("User tapped  allow")
                     // User clicked don't allow
                 } else {
-                   
+                    
                     print("User tapped dont allow")
-                   
-                       // self.endSession()
-                      //  self.cameraButton.tintColor = self.view.tintColor
-                   
-                   // imagePickerController.dismissViewControllerAnimated(true, completion: nil)
+                    
+                    // self.endSession()
+                    //  self.cameraButton.tintColor = self.view.tintColor
+                    
+                    // imagePickerController.dismissViewControllerAnimated(true, completion: nil)
                 }
             })
         }
-         else if
+        else if
             AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo) == AVAuthorizationStatus.Denied {
-                
-                let alertController = UIAlertController(title: "Unable to activate camera", message: "Check that Free Protractor has permission to use the camera in the device settings", preferredStyle: .Alert)
-                
-                let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
-                alertController.addAction(defaultAction)
-                
-                presentViewController(alertController, animated: true, completion: nil)
-                 print("User deni")
+            
+            let alertController = UIAlertController(title: "Unable to activate camera", message: "Check that Free Protractor has permission to use the camera in the device settings", preferredStyle: .Alert)
+            
+            let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            alertController.addAction(defaultAction)
+            
+            presentViewController(alertController, animated: true, completion: nil)
+            print("User deni")
         }
     }
     
     
-  //MARK: horizon line
+    //MARK: horizon line
     let manager: CMMotionManager = CMMotionManager()
     @IBOutlet weak var line: UIView!
-    //segue	UIStoryboardSegue	0x7ca652b0	0x7ca652b0
+    
+    
+    
+    var upgradeVC:UpgradeTableviewController!
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "Settings") {
             let nav = segue.destinationViewController as! UINavigationController
@@ -548,14 +575,60 @@ class NavigationViewController: UIViewController
             vc.delegate = self
         }
         
-        if (segue.identifier == "Shop") {
-           
+        if (segue.identifier == "store") {
+            
             let nav = segue.destinationViewController as! UINavigationController
-            let vc = (nav.viewControllers[0] as! ShopViewController)
-            vc.pTitle = self.productTitle
-            vc.pDescription = self.productDescription
-            vc.pPrice = self.productPrice
-           // vc.delegate = self
+            let vc = (nav.viewControllers[0] as! UpgradeTableviewController)
+            self.upgradeVC = vc
+            //            vc.pTitle = self.productTitle
+            //            vc.pDescription = self.productDescription
+            //            vc.pPrice = self.productPrice
+            vc.delegate = self
+            
+            
+            let showScales = self.userDefaults.valueForKey("ScaleP") as! Bool
+            
+            if showScales == true{
+                print("HideThe Button")
+                
+                self.upgradeVC.showTypeButton = false
+            }
+            else {
+                // show button
+               self.upgradeVC.showTypeButton = true
+            }
+            
+            
+            self.upgradeVC.three60Title = self.three60Title
+            self.upgradeVC.three60Description = self.three60Description
+             let purchaseState = self.userDefaults.valueForKey("Three60State")as! String
+            if purchaseState == "purchasing"{
+             self.upgradeVC.three60Price = "Purchasing"
+            }
+            
+            else if purchaseState == "purchased" {
+                
+              self.upgradeVC.three60Price = "Purchased"
+            }
+            
+            else if purchaseState == "notPurchased" {
+                
+              self.upgradeVC.three60Price = self.three60Price
+            }
+            
+            else if purchaseState == "deferred" {
+                
+              self.upgradeVC.three60Price = "Waiting permission"
+            }
+           // self.upgradeVC.three60Price = self.three60Price
+            
+            self.upgradeVC.scaleTitle = self.scaleTitle
+            self.upgradeVC.scaleDescription = self.scaleDescription
+            self.upgradeVC.scalePrice = self.scalePrice
+            
+            
+            
+            
         }
     }
     
@@ -566,45 +639,47 @@ class NavigationViewController: UIViewController
     
     //Code for IAP
     
-    func loadInAppPurchases(){
-        //setupIAP
+    func showScalesButton(){
         
-                if(SKPaymentQueue.canMakePayments()){
-                    print("Iap enabled loading")
-                    let productID:NSSet = NSSet(objects: "uk.co.pongosoft.Protractor.camera")
-                    let request: SKProductsRequest = SKProductsRequest(productIdentifiers: productID as! Set<String>)
-                    request.delegate = self
-                    request.start()
-                }
-                    else{
+        let showScales = self.userDefaults.valueForKey("ScaleP") as! Bool
+        print(showScales)
+        if showScales == true{
+            print("HideThe Button")
+            
+            self.scaleTypeButton.hidden = false
+        }
+        else {
+            // show button
+            self.scaleTypeButton.hidden = true
+        }
+    }
+    
+    
+    func show360Button(){
+        let show360 = self.userDefaults.valueForKey("three60P") as! Bool
         
-                     print("Please enable IAP")
-                    
-                }
-        
+        if show360 == true{
+            //hide button
+            self.swapViewControllersButton.hidden = false
+        }
+        else {
+            // show button
+            self.swapViewControllersButton.hidden = true
+        }
         
     }
     
     
+    //upgradeViewDelegateMethods
     
-    func request(request: SKRequest, didFailWithError error: NSError) {
-        print("Error Fetching product information");
-        print(error.localizedDescription)
-    }
-    
-    
-    
-    
-    @IBOutlet weak var storeButton: UIButton!
-    
-   
-    
-    
-    @IBAction func PurchaseCameraMode(sender: UIButton) {
+    func buyScale(){
         
+        
+        
+        print("buyScale")
         for product in list{
             let prodID = product.productIdentifier
-            if (prodID == "uk.co.pongosoft.Protractor.camera"){
+            if (prodID ==  "uk.co.pongosoft.Protractor.camera"){
                 
                 p = product
                 buyProduct()
@@ -613,20 +688,145 @@ class NavigationViewController: UIViewController
             }
         }
         
+        
+        
+        
+        //        if (upgradeVC != nil) {
+        //
+        //          upgradeVC.priceType.text = "Installed"
+        //          upgradeVC.buyButtonType.enabled = false
+        //        }
     }
     
     
+    func buy360(){
+        
+        
+        for product in list{
+            let prodID = product.productIdentifier
+            if (prodID == "uk.co.pongosoft.Protractor.360"){
+                
+                p = product
+                buyProduct()
+                break;
+                
+            }
+        }
+        
+        
+        print("buy360")
+    }
     
-    @IBAction func restorePurchases(sender: UIButton) {
-        //   if self.transactionObseved == false{
-        //    SKPaymentQueue.defaultQueue().addTransactionObserver(self)
-        //       self.transactionObseved = true
-        // }
-        
-        
+    
+    func  restoreProducts(){
+        print("restore")
         SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
+    }
+    
+    
+    
+    func loadInAppPurchases(){
+        //setupIAP
+        
+        if(SKPaymentQueue.canMakePayments()){
+            print("Iap enabled loading")
+            let productID:NSSet = NSSet(objects: "uk.co.pongosoft.Protractor.camera", "uk.co.pongosoft.Protractor.360")
+            let request: SKProductsRequest = SKProductsRequest(productIdentifiers: productID as! Set<String>)
+            request.delegate = self
+            request.start()
+        }
+        else{
+            
+            print("Please enable IAP")
+            self.showStoreView = "notAllowed"
+            self.storeButton.enabled = true
+        }
+        
         
     }
+    
+    
+    var requestError = ""
+    func request(request: SKRequest, didFailWithError error: NSError) {
+        print("Error Fetching product information");
+        print(error.localizedDescription)
+        
+        self.showStoreView = "failed"
+        self.requestError = error.localizedDescription
+        self.storeButton.enabled = true
+    }
+    
+    
+    
+    
+    @IBOutlet weak var storeButton: UIButton!
+    
+    
+    @IBAction func showUpgradeOptions(sender: AnyObject) {
+        
+        print(showStoreView)
+        
+        switch self.showStoreView {
+        case "notAllowed":
+            let alertController = UIAlertController(title: "Purchase", message: "In app purchases are not allowed on this device", preferredStyle: .Alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            alertController.addAction(defaultAction)
+            presentViewController(alertController, animated: true, completion: nil)
+            
+            break
+            
+        case "failed":
+            let alertController = UIAlertController(title: "Error", message:  self.requestError, preferredStyle: .Alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            alertController.addAction(defaultAction)
+            presentViewController(alertController, animated: true, completion: nil)
+            
+            
+            
+            break
+            
+        case "passed":
+            
+            print("good to go")
+            self.performSegueWithIdentifier("store", sender: nil)
+            break
+            
+        default:
+            break
+            
+        }
+        
+        
+    }
+    
+    
+    //    @IBAction func PurchaseCameraMode(sender: UIButton) {
+    //
+    //        for product in list{
+    //            let prodID = product.productIdentifier
+    //            if (prodID == "uk.co.pongosoft.Protractor.camera"){
+    //
+    //                p = product
+    //                buyProduct()
+    //                break;
+    //
+    //            }
+    //        }
+    //
+    //    }
+    //
+    //
+    //
+    //    @IBAction func restorePurchases(sender: UIButton) {
+    //        //   if self.transactionObseved == false{
+    //        //    SKPaymentQueue.defaultQueue().addTransactionObserver(self)
+    //        //       self.transactionObseved = true
+    //        // }
+    //
+    //
+    //        SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
+    //
+    //    }
     
     
     var list = [SKProduct]()
@@ -635,10 +835,6 @@ class NavigationViewController: UIViewController
     func buyProduct(){
         print("Buy" + p.productIdentifier)
         let pay = SKPayment(product: p)
-        // if self.transactionObseved == false{
-        //     SKPaymentQueue.defaultQueue().addTransactionObserver(self)
-        //      self.transactionObseved = true
-        //  }
         SKPaymentQueue.defaultQueue().addPayment(pay as SKPayment)
         
     }
@@ -647,43 +843,109 @@ class NavigationViewController: UIViewController
     
     override func awakeFromNib() {
         super.awakeFromNib()
-         SKPaymentQueue.defaultQueue().addTransactionObserver(self)
-        
+        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector: #selector(NavigationViewController.applicationActive(_:)),
+            name: UIApplicationDidBecomeActiveNotification,
+            object: nil)
     }
     
     
     deinit {
         
         SKPaymentQueue.defaultQueue().removeTransactionObserver(self)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
+   
+    
+    
+    
+    func applicationActive(notification: NSNotification) {
+        print("VCActive")
+     //   if self.showStoreView != "passed"{
+            self.storeButton.enabled = false
+            self.loadInAppPurchases()
+      //  }
+        
+        // do something
+    }
+    
+    
+    
     
     var productTitle: String!
     var productDescription: String!
     var productPrice: String!
     
+    var scaleTitle: String!
+    var scaleDescription: String!
+    var scalePrice: String!
+    var three60Title: String!
+    var three60Description: String!
+    var three60Price: String!
+    
+    
     func productsRequest(request: SKProductsRequest, didReceiveResponse response: SKProductsResponse) {
         print("product request")
         let myProduct = response.products
+        list = myProduct
+        print(myProduct.count)
         for product in myProduct{
-            print ("product added")
-            print(product.productIdentifier)
             
-            print(product.localizedTitle)
-            self.productTitle = product.localizedTitle
-            print(product.localizedDescription)
-            self.productDescription = product.localizedDescription
-            print(product.price)
-            let numberFormatter = NSNumberFormatter()
-            numberFormatter.numberStyle = .CurrencyStyle
-            numberFormatter.locale = product.priceLocale
-            self.productPrice = numberFormatter.stringFromNumber(product.price)
             
-           // self.productPrice = product.price
-            list.append(product as SKProduct)
+            //            print ("product added")
+            //            print(product.productIdentifier)
+            //            print(product.localizedTitle)
+            //            self.productTitle = product.localizedTitle
+            //            print(product.localizedDescription)
+            //            self.productDescription = product.localizedDescription
+            //            print(product.price)
+            //            let numberFormatter = NSNumberFormatter()
+            //            numberFormatter.numberStyle = .CurrencyStyle
+            //            numberFormatter.locale = product.priceLocale
+            //            self.productPrice = numberFormatter.stringFromNumber(product.price)
+            //            list.append(product as SKProduct)
+            
+            if product.productIdentifier == "uk.co.pongosoft.Protractor.camera"{
+                print ("product added")
+                print(product.productIdentifier)
+                print(product.localizedTitle)
+                self.scaleTitle = product.localizedTitle
+                print(product.localizedDescription)
+                self.scaleDescription = product.localizedDescription
+                print(product.price)
+               
+                let numberFormatter = NSNumberFormatter()
+                numberFormatter.numberStyle = .CurrencyStyle
+                numberFormatter.locale = product.priceLocale
+                self.scalePrice = numberFormatter.stringFromNumber(product.price)
+                //  list.append(product as SKProduct)
+            }
+            
+            if product.productIdentifier == "uk.co.pongosoft.Protractor.360"{
+                print ("product added")
+                print(product.productIdentifier)
+                print(product.localizedTitle)
+                self.three60Title = product.localizedTitle
+                print(product.localizedDescription)
+                self.three60Description = product.localizedDescription
+                print(product.price)
+                let numberFormatter = NSNumberFormatter()
+                numberFormatter.numberStyle = .CurrencyStyle
+                numberFormatter.locale = product.priceLocale
+                self.three60Price = numberFormatter.stringFromNumber(product.price)
+                // list.append(product as SKProduct)
+            }
+            
+            
+            
         }
+        
+        self.showStoreView = "passed"
         self.storeButton.enabled = true
         
-        
+        print(list.count)
     }
     
     func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
@@ -693,42 +955,155 @@ class NavigationViewController: UIViewController
             print(trans.error)
             
             switch trans.transactionState{
-            case.Purchased:
-                print("Buy ok unlock iap here")
-                print(p.productIdentifier)
-                
-                let prodID = p.productIdentifier as String
-                switch prodID{
+            case.Purchasing:
+                print("purchasing")
+
+                let ID = transaction.payment.productIdentifier
+                switch ID{
                 case "uk.co.pongosoft.Protractor.camera":
-                    print("add cameraMode")
-                default:
-                    print("Iap not setup")
+                    print("purchasing cam")
+                    self.userDefaults.setObject("purchasing", forKey: "ScaleState")
+                    if (self.upgradeVC != nil) {
+                        self.upgradeVC.priceType.text = "Purchasing"}
+                    break
+            
+                case "uk.co.pongosoft.Protractor.360":
+                    print("purchasing 360")
+                    self.userDefaults.setObject("purchasing", forKey: "Three60State")
+                    if (self.upgradeVC != nil) {
+                        self.upgradeVC.price360.text = "Purchasing"}
+                    break
+                    
+                default: break
+ 
+                }
+                
+                break
+                
+                
+            case.Purchased:
+
+                let ID = transaction.payment.productIdentifier
+                unlockProductForID(ID)
+                switch ID{
+                case "uk.co.pongosoft.Protractor.camera":
+                    print("purchasing cam")
+                    self.userDefaults.setObject("purchased", forKey: "ScaleState")
+                    if (self.upgradeVC != nil) {
+                        self.upgradeVC.priceType.text = "Purchased"}
+                    break
+                    
+                case "uk.co.pongosoft.Protractor.360":
+                    print("purchasing 360")
+                    self.userDefaults.setObject("purchased", forKey: "Three60State")
+                    if (self.upgradeVC != nil) {
+                        self.upgradeVC.price360.text = "Purchased"}
+                    break
+                    
+                default: break
                     
                 }
                 queue.finishTransaction(trans)
-                break;
+                break
                 
             case .Failed:
                 print("Buy error")
+                let ID = transaction.payment.productIdentifier
+                switch ID{
+                case "uk.co.pongosoft.Protractor.camera":
+                    print("purchasing cam")
+                    self.userDefaults.setObject("notPurchased", forKey: "ScaleState")
+                    if (self.upgradeVC != nil) && (self.scalePrice != nil){
+                        self.upgradeVC.priceType.text = self.scalePrice}
+                    break
+                    
+                case "uk.co.pongosoft.Protractor.360":
+                    print("purchasing 360")
+                    self.userDefaults.setObject("notPurchased", forKey: "Three60State")
+                    if (self.upgradeVC != nil) && (self.three60Price != nil) {
+                        self.upgradeVC.price360.text = self.three60Price}
+                    break
+                    
+                default: break
+                    
+                }
+                
+                //  print(transaction.localizedFailureReason)
+                if transaction.error?!.code == SKErrorCode.PaymentCancelled.rawValue {
+                    print("User Cancelled Payment")
+                }
+                else {
+                    if let error = transaction.error {
+                        /// Preferably show an alert here
+                        print(error?.localizedDescription)
+                    }
+                }
+                
+                
                 queue.finishTransaction(trans)
                 break;
                 
                 
             case .Restored:
                 print("Restored")
+                /// safely unwrap originalTransaction as its an optional
+                if let originalTransaction = transaction.originalTransaction {
+                    let ID = originalTransaction!.payment.productIdentifier
+                    unlockProductForID(ID)
+                    
+                    switch ID{
+                    case "uk.co.pongosoft.Protractor.camera":
+                        print("purchasing cam")
+                        self.userDefaults.setObject("purchased", forKey: "ScaleState")
+                        if (self.upgradeVC != nil) {
+                            self.upgradeVC.priceType.text = "Purchased"}
+                        break
+                        
+                    case "uk.co.pongosoft.Protractor.360":
+                        print("purchasing 360")
+                        self.userDefaults.setObject("purchased", forKey: "Three60State")
+                        if (self.upgradeVC != nil) {
+                            self.upgradeVC.price360.text = "Purchased"}
+                        break
+                        
+                    default: break
+                    }
+                }
+                
                 queue.finishTransaction(trans)
-                break;
+                break
                 
                 
             case .Deferred:
                 print("Deferred")
-                // queue.finishTransaction(trans)
-                break;
+               
+                let ID = transaction.payment.productIdentifier
+                switch ID{
+                case "uk.co.pongosoft.Protractor.camera":
+                    print("purchasing cam")
+                    self.userDefaults.setObject("deferred", forKey: "ScaleState")
+                    if (self.upgradeVC != nil) {
+                        self.upgradeVC.priceType.text = "Waiting permission"}
+                    break
+                    
+                case "uk.co.pongosoft.Protractor.360":
+                    print("purchasing 360")
+                    self.userDefaults.setObject("deferred", forKey: "Three60State")
+                    if (self.upgradeVC != nil) {
+                        self.upgradeVC.price360.text = "Waiting permission"}
+                    break
+                    
+                default: break
+                    
+                }
                 
                 
-            default:
-                print("default")
-                break;
+                break
+                
+                
+                //            default:
+                //                print("default")
+                //                break;
                 
                 
             }
@@ -736,6 +1111,33 @@ class NavigationViewController: UIViewController
         }
         
     }
+    
+    
+    func unlockProductForID(productID: String) {
+        switch productID {
+            
+        case "uk.co.pongosoft.Protractor.360":
+            print("unlock the 360")
+            self.userDefaults.setBool(true, forKey: "three60P")
+            self.swapViewControllersButton.hidden = false
+            
+            
+            
+            break;
+        case "uk.co.pongosoft.Protractor.camera":
+            print("unlock the camera")
+            self.userDefaults.setBool(true, forKey:  "ScaleP")
+            self.scaleTypeButton.hidden = false
+            break;
+            
+        default:
+            print("default")
+            break;
+            
+            /// unlock product for correct ID
+        }
+    }
+    
     
     
     func finishTransaction(trans:SKPaymentTransaction){
@@ -747,29 +1149,47 @@ class NavigationViewController: UIViewController
         print("remove trans")
         
     }
+    
+    
     func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue) {
-        print("transaction restored")
-        //  var puchasedItenID = []
-        for transaction in queue.transactions{
-            let t: SKPaymentTransaction = transaction
-            let prodID = t.payment.productIdentifier as String
-            switch prodID{
-            case "uk.co.pongosoft.Protractor.camera":
-                print("add cameraMode")
-            default:
-                print("Iap not setup")
-                
-            }
+        guard queue.transactions.count != 0 else {
+            // showAlert that nothing restored
             
+            print("Nothing to restore")
+            return
         }
-        
-        
+        print("restore successful")
+        // show restore successful alert
+    }
+    
+    // Restore failed
+    func paymentQueue(queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: NSError) {
+        print(error.localizedDescription)
+        /// handle the restore error if you need to.
     }
     
     
     
     
     
+    //    func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue) {
+    //        print("transaction restored")
+    //        //  var puchasedItenID = []
+    //        for transaction in queue.transactions{
+    //            let t: SKPaymentTransaction = transaction
+    //            let prodID = t.payment.productIdentifier as String
+    //            switch prodID{
+    //            case "uk.co.pongosoft.Protractor.camera":
+    //                print("add cameraMode")
+    //            default:
+    //                print("Iap not setup")
+    //                
+    //            }
+    //            
+    //        }
+    //        
+    //        
+    //    }
     
     
     
@@ -779,5 +1199,10 @@ class NavigationViewController: UIViewController
     
     
     
- 
+    
+    
+    
+    
+    
+    
 }

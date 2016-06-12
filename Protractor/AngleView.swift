@@ -9,11 +9,11 @@
 import UIKit
 
 
-extension Float {
-    var degreesToRadians : Float {
-        return Float(self) * Float(M_PI) / 180.0
-    }
-}
+//extension Float {
+//    var degreesToRadians : Float {
+//        return Float(self) * Float(M_PI) / 180.0
+//    }
+//}
 
 
 class AngleView: UIView {
@@ -194,16 +194,7 @@ class AngleView: UIView {
         self.layer.addSublayer(pointerLayer!)
        
         let pointerPath = UIBezierPath()
-        
-        
-        
-       
-       
-      //  CGContextAddLineToPoint(context, 160 + (160.0 * (cos((x*14.4)*(M_PI/180)))),
-      //      200 + (160.0 * (sin((x*14.4)*(M_PI/180)))));
-        
-     //   pointerPath.addLineToPoint(CGPointMake(center2.x  + (radius )  * CGFloat(c1), center2.y + (radius) * CGFloat(b1)))
-        //
+
         pointerPath.moveToPoint(center2)
         pointerPath.addLineToPoint(CGPointMake(center2.x  + ( self.superview!.bounds.size.width )  * CGFloat(d1), center2.y + ( self.superview!.bounds.size.width ) * CGFloat(e1)))
         

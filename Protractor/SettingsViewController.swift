@@ -29,9 +29,17 @@ class SettingsViewController: UITableViewController {
     var hideAngle: Bool?
     var hideAngleType: Bool?
     var hideHorizonGuide: Bool?
+   let storeManager = StoreManager.sharedInstance
    
+    
+    
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         //
         tableView.estimatedRowHeight = 56.0
         
@@ -43,6 +51,21 @@ class SettingsViewController: UITableViewController {
        
     }
    
+    
+    
+    func enableUpgradeCell() {
+        
+        
+        
+        
+    }
+    
+    
+    
+    
+    
+    
+    
     //
     override func tableView(tableView: UITableView,
                             heightForRowAtIndexPath indexPath: NSIndexPath)
@@ -183,6 +206,11 @@ class SettingsViewController: UITableViewController {
             UIApplication.sharedApplication().openURL(NSURL(string: url)!)
             
         }
+        if tableView.cellForRowAtIndexPath(indexPath)!.tag == 1{
+            
+        }
+        
+        
     }
     
     

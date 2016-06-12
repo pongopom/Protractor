@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ScaleState</key>
+	<string>notPurchased</string>
+	<key>Three60State</key>
+	<string>notPurchased</string>
+	<key>three60P</key>
+	<false/>
+	<key>ScaleP</key>
+	<false/>
 	<key>ProtractorType</key>
 	<string>Deg</string>
 	<key>HideAngleType</key>
