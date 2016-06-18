@@ -13,6 +13,7 @@ protocol UpgradeTableviewControllerDelegate{
     func buyScale()
     func buy360()
     func  restoreProducts()
+    func upgradeVCDismissed()
 }
 
 
@@ -52,7 +53,9 @@ class UpgradeTableviewController: UITableViewController {
         if showTypeButton == false{
             self.buyButtonType.enabled = false
         }
-        
+        if show360Button == false{
+            self.buyButton360.enabled = false
+        }
     }
 
     
@@ -63,15 +66,17 @@ class UpgradeTableviewController: UITableViewController {
         
     }
     
-    @IBAction func buy360(sender: AnyObject) {
+    @IBAction func buy360(sender: UIButton) {
         
         self.delegate.buy360()
+        sender.enabled = false
     }
     
     
-    @IBAction func buyScales(sender: AnyObject) {
+    @IBAction func buyScales(sender: UIButton) {
         
        self.delegate.buyScale()
+        sender.enabled = false
     }
     
     
@@ -81,7 +86,7 @@ class UpgradeTableviewController: UITableViewController {
     @IBAction func done(sender: AnyObject) {
         
        self.dismissViewControllerAnimated(true, completion: nil)
-        
+        self.delegate.upgradeVCDismissed()
         
     }
     
@@ -92,7 +97,6 @@ class UpgradeTableviewController: UITableViewController {
     override func tableView(tableView: UITableView,
                             didSelectRowAtIndexPath indexPath: NSIndexPath){
         
-        print ("row selected")
         
     }
     

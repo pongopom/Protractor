@@ -15,7 +15,7 @@
 	<key>HideAngleType</key>
 	<true/>
 	<key>HideHorizon</key>
-	<false/>
+	<true/>
 	<key>HideAngle</key>
 	<false/>
 	<key>HideScale</key>

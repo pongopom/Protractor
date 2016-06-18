@@ -88,7 +88,6 @@ class OneEightyViewController: UIViewController {
     func updateProtractorType(){
         let protractorType = (self.userDefaults.valueForKey("ProtractorType") as! String)
         self.protractor = protractorType
-        print("protractor type update")
         if (protractorType == "Per"){
             self.scaleImageView.image = UIImage(named: "per180")
         }
@@ -134,7 +133,6 @@ class OneEightyViewController: UIViewController {
     }
     
     func updateProtractorLabels(angle: Float){
-        print("|angle is \(angle)")
         angleView.setTheAngle(angle)
         let angle2 = 360.0 - angle
         redTypeLabel.text = typeOfAngleFor(Float(angle2))

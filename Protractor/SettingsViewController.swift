@@ -29,7 +29,7 @@ class SettingsViewController: UITableViewController {
     var hideAngle: Bool?
     var hideAngleType: Bool?
     var hideHorizonGuide: Bool?
-   let storeManager = StoreManager.sharedInstance
+  // let storeManager = StoreManager.sharedInstance
    
     
     
@@ -38,14 +38,7 @@ class SettingsViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        //
         tableView.estimatedRowHeight = 56.0
-        
-        //
-        print("Settings view loaded")
-        print(userDefaults.valueForKeyPath("HideScale"))
    self.setupUI()
 
        
@@ -124,28 +117,25 @@ class SettingsViewController: UITableViewController {
     @IBAction func showHideScale(sender: UISwitch) {
         
         if sender.on == true{
-            print("Scale on")
-            
-            self.userDefaults.setBool(false, forKey: "HideScale")
-            //TO DO update user defs
+
+                 self.userDefaults.setBool(false, forKey: "HideScale")
+           
         }
         else{
             
             if(self.showAngleSwitch.on == false){
                self.showAngleSwitch.setOn(true, animated: true)
               self.userDefaults.setBool(false, forKey: "HideAngle")
-                //TO DO update user defs
+               
             }
             
           self.userDefaults.setBool(true, forKey: "HideScale")
-          print("Scale off")
         }
         self.delegate.updateView()
     }
     
     @IBAction func showHideAngle(sender: UISwitch) {
         if sender.on == true{
-            print("angle on")
             self.userDefaults.setBool(false, forKey: "HideAngle")
         }
         else{
@@ -153,10 +143,8 @@ class SettingsViewController: UITableViewController {
             if(self.showScaleSwitch.on == false){
                 self.showScaleSwitch.setOn(true, animated: true)
                 self.userDefaults.setBool(false, forKey: "HideScale")
-                //TO DO update user defs
             }
             self.userDefaults.setBool(true, forKey: "HideAngle")
-            print("angle off")
         }
        self.delegate.updateView() 
     }
@@ -184,11 +172,9 @@ class SettingsViewController: UITableViewController {
     
     @IBAction func showHideHorizonGuide(sender: UISwitch) {
         if sender.on == true{
-            print("horizon on")
             self.userDefaults.setBool(false, forKey: "HideHorizon")
         }
         else{
-            print("horizon off")
              self.userDefaults.setBool(true, forKey: "HideHorizon")
         }
         self.delegate.showHideGuideLine()
@@ -199,7 +185,6 @@ class SettingsViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
        
         if tableView.cellForRowAtIndexPath(indexPath)!.tag == 10{
-            print("bingo")
            // https://userpub.itunes.apple.com/WebObjects/MZUserPublishing.woa/wa/addUserReview?id=337064413&type=Purple+Software
             
             let url = "itms-apps://itunes.apple.com/app/id\(555590467)"

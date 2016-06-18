@@ -79,7 +79,7 @@ class AngleView180: UIView {
         piePath2.addLineToPoint(CGPointMake(center2.x  + (radius )  * CGFloat(b1), center2.y + (radius) * CGFloat(c1)))
         piePath2.addArcWithCenter(center2 , radius: radius, startAngle: CGFloat(angle2.degreesToRadians), endAngle:CGFloat(angleb2.degreesToRadians) , clockwise: true)
         
-        print(touchedAngle)
+        
         piePath2.addLineToPoint(center2)
         circleLayerBlue!.path = piePath2.CGPath
         

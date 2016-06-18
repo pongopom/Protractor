@@ -34,7 +34,7 @@ class ThreeSixtyViewController: UIViewController {
     let userDefaults = NSUserDefaults.standardUserDefaults()
    
     func updateTheUI(){
-        print("time to update the UI")
+        //("time to update the UI")
         let hideScale = (self.userDefaults.valueForKey("HideScale") as! Bool)
         let hideAngle = (self.userDefaults.valueForKey("HideAngle") as! Bool)
         let hideAngleType = (self.userDefaults.valueForKey("HideAngleType") as! Bool)
@@ -95,7 +95,6 @@ class ThreeSixtyViewController: UIViewController {
     func updateProtractorType(){
         let protractorType = (self.userDefaults.valueForKey("ProtractorType") as! String)
         self.protractor = protractorType
-        print("protractor type update")
         if (protractorType == "Per"){
             self.scaleImageView.image = UIImage(named: "per360")
             
@@ -128,7 +127,6 @@ class ThreeSixtyViewController: UIViewController {
     
     var angleReadOut: CGFloat = 0.0{
         didSet {
-            print("|angle is \(360 - angleReadOut )")
             angleView.setTheAngle(Float(angleReadOut))
             let angle2 = 360.0 - angleReadOut
             redTypeLabel.text = typeOfAngleFor(Float(angle2))
@@ -141,7 +139,6 @@ class ThreeSixtyViewController: UIViewController {
     
     
     func updateProtractorLabels(angle: Float){
-        print("|angle is \(angle)")
         angleView.setTheAngle(angle)
         let angle2 = 360.0 - angle
         

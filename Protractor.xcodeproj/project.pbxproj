@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6305A63D1C76E30800D65893 /* ShopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6305A63C1C76E30800D65893 /* ShopViewController.swift */; };
 		6335BFB51CDC528200942F9F /* Swift Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335BFB41CDC528200942F9F /* Swift Extensions.swift */; };
 		6363EF151BE9DBB600D7BC01 /* OneEightyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6363EF141BE9DBB600D7BC01 /* OneEightyViewController.swift */; };
 		6363EF171BE9DBFD00D7BC01 /* ThreeSixtyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6363EF161BE9DBFD00D7BC01 /* ThreeSixtyViewController.swift */; };
@@ -16,7 +15,6 @@
 		6370E3DF1BF3117900FD7C4D /* AngleView180.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6370E3DE1BF3117900FD7C4D /* AngleView180.swift */; };
 		637601C61C3B91FF009891BE /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637601C51C3B91FF009891BE /* SettingsViewController.swift */; };
 		637692F71C3E3F8200CD6B31 /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 637692F61C3E3F8200CD6B31 /* Settings.plist */; };
-		6381ABEB1CF419BC000C9F75 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6381ABEA1CF419BC000C9F75 /* StoreManager.swift */; };
 		638584511C578CDA00C4D55A /* AngleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638584501C578CDA00C4D55A /* AngleType.swift */; };
 		63859C201BE893CF00367460 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63859C1F1BE893CF00367460 /* AppDelegate.swift */; };
 		63859C251BE893CF00367460 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63859C231BE893CF00367460 /* Main.storyboard */; };
@@ -28,7 +26,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6305A63C1C76E30800D65893 /* ShopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopViewController.swift; sourceTree = "<group>"; };
 		6335BFB41CDC528200942F9F /* Swift Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Swift Extensions.swift"; sourceTree = "<group>"; };
 		6363EF141BE9DBB600D7BC01 /* OneEightyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneEightyViewController.swift; sourceTree = "<group>"; };
 		6363EF161BE9DBFD00D7BC01 /* ThreeSixtyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreeSixtyViewController.swift; sourceTree = "<group>"; };
@@ -37,7 +34,6 @@
 		6370E3DE1BF3117900FD7C4D /* AngleView180.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AngleView180.swift; sourceTree = "<group>"; };
 		637601C51C3B91FF009891BE /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		637692F61C3E3F8200CD6B31 /* Settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Settings.plist; sourceTree = "<group>"; };
-		6381ABEA1CF419BC000C9F75 /* StoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
 		638584501C578CDA00C4D55A /* AngleType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AngleType.swift; sourceTree = "<group>"; };
 		63859C1C1BE893CF00367460 /* Protractor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Protractor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63859C1F1BE893CF00367460 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -86,14 +82,12 @@
 				6370E3DE1BF3117900FD7C4D /* AngleView180.swift */,
 				63673C2F1BF0F2B2002B31CF /* OneFingerRotationGesture.swift */,
 				63859C311BE894CB00367460 /* NavigationViewController.swift */,
-				6305A63C1C76E30800D65893 /* ShopViewController.swift */,
 				63673C311BF0F2F8002B31CF /* AngleView.swift */,
 				6335BFB41CDC528200942F9F /* Swift Extensions.swift */,
 				6363EF141BE9DBB600D7BC01 /* OneEightyViewController.swift */,
 				6363EF161BE9DBFD00D7BC01 /* ThreeSixtyViewController.swift */,
 				637601C51C3B91FF009891BE /* SettingsViewController.swift */,
 				638874131CF34F8900CBAA18 /* UpgradeTableviewController.swift */,
-				6381ABEA1CF419BC000C9F75 /* StoreManager.swift */,
 				638584501C578CDA00C4D55A /* AngleType.swift */,
 				63859C261BE893CF00367460 /* Assets.xcassets */,
 				63859C231BE893CF00367460 /* Main.storyboard */,
@@ -184,13 +178,11 @@
 			files = (
 				6363EF151BE9DBB600D7BC01 /* OneEightyViewController.swift in Sources */,
 				6363EF171BE9DBFD00D7BC01 /* ThreeSixtyViewController.swift in Sources */,
-				6305A63D1C76E30800D65893 /* ShopViewController.swift in Sources */,
 				63673C321BF0F2F8002B31CF /* AngleView.swift in Sources */,
 				6370E3DF1BF3117900FD7C4D /* AngleView180.swift in Sources */,
 				63673C301BF0F2B2002B31CF /* OneFingerRotationGesture.swift in Sources */,
 				638584511C578CDA00C4D55A /* AngleType.swift in Sources */,
 				63859C321BE894CB00367460 /* NavigationViewController.swift in Sources */,
-				6381ABEB1CF419BC000C9F75 /* StoreManager.swift in Sources */,
 				638874141CF34F8900CBAA18 /* UpgradeTableviewController.swift in Sources */,
 				6335BFB51CDC528200942F9F /* Swift Extensions.swift in Sources */,
 				63859C201BE893CF00367460 /* AppDelegate.swift in Sources */,

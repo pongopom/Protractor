@@ -24,7 +24,7 @@ class AngleView: UIView {
     func setTheAngle (angl:Float){
     touchedAngle = angl
         self.layoutSubviews()
-        print("touch\(angl)")
+       
     }
     
     
@@ -45,9 +45,7 @@ class AngleView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-       // print("layout Called")
-      // let circleLayerRed
-        
+     
         if  (circleLayerRed != nil){
             circleLayerRed?.removeFromSuperlayer()
             circleLayerRed = nil
@@ -165,8 +163,7 @@ class AngleView: UIView {
        // circleLayerBlue.lineWidth = 1
       //  circleLayerBlue.lineWidth = 8
         piePath2.addArcWithCenter(center2 , radius: radius, startAngle: CGFloat(angle2.degreesToRadians), endAngle:CGFloat(angleb2.degreesToRadians) , clockwise: true)
-        
-       print(touchedAngle)
+       
         piePath2.addLineToPoint(center2)
         circleLayerBlue!.path = piePath2.CGPath
        
