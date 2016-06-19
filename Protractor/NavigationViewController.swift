@@ -154,9 +154,7 @@ class NavigationViewController: UIViewController
             manager.startDeviceMotionUpdatesToQueue(queue) {
                 (data: CMDeviceMotion?, error: NSError?) in
                 let rotation = atan2(data!.gravity.y, data!.gravity.x) * -1
-                
-              
-                
+
                 NSOperationQueue.mainQueue().addOperationWithBlock {
                     if data?.attitude.roll < -0.5 || data?.attitude.roll > 0.5{
                         self.line.alpha = 1
@@ -168,12 +166,10 @@ class NavigationViewController: UIViewController
                     }
                     self.line.transform = CGAffineTransformMakeRotation(CGFloat(rotation))
                     if rotation < 0.01 && rotation > -0.01{
-                        if rotation < 0.003 && rotation > -0.003{
                             self.line.backgroundColor = UIColor.greenColor()
                         }
-                        else{
-                            self.line.backgroundColor = UIColor.orangeColor()
-                        }
+                else if rotation > 3.13 && (rotation < 3.14  && rotation > -3.13)    {
+                        self.line.backgroundColor = UIColor.greenColor()
                     }
                     else{
                         self.line.backgroundColor = UIColor.redColor()
@@ -182,10 +178,6 @@ class NavigationViewController: UIViewController
             }
         }
     }
-    
-    
-    
-    
     
     var loadedViewControllerName: String?
     
@@ -196,7 +188,6 @@ class NavigationViewController: UIViewController
             self.oneEightyViewController?.view.frame = self.containerView.frame
             self.containerView.addSubview((self.oneEightyViewController?.view)!)
             self.oneEightyViewController?.didMoveToParentViewController(self)
-            
         }
     }
     
@@ -276,15 +267,53 @@ class NavigationViewController: UIViewController
         return false
     }
     
+    
+    var isUnlocked = true
+    
     override func shouldAutorotate() -> Bool {
         //  self.view.layoutSublayersOfLayer(self.camView.layer)
-        return true
+        return self.isUnlocked
     }
     
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.LandscapeLeft
+//    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+//        return UIInterfaceOrientationMask.LandscapeLeft
+//    }
+    
+    @IBAction func lockRotation(sender: UIButton) {
+        if self.isUnlocked == false{
+            self.isUnlocked = true
+            sender.setImage(UIImage(named: "unlocked"), forState: UIControlState.Normal)
+        }
+        else{
+          self.isUnlocked = false
+            sender.setImage(UIImage(named: "locked"), forState: UIControlState.Normal)
+        }
     }
     
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator)
+    {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        coordinator.animateAlongsideTransition(
+            { (UIViewControllerTransitionCoordinatorContext) in
+                let deltaTransform = coordinator.targetTransform()
+                let deltaAngle = atan2f(Float(deltaTransform.b), Float(deltaTransform.a))
+                var currentRotation : Float = (self.camView!.layer.valueForKeyPath("transform.rotation.z")?.floatValue)!
+                // Adding a small value to the rotation angle forces the animation to occur in a the desired direction, preventing an issue where the view would appear to rotate 2PI radians during a rotation from LandscapeRight -> LandscapeLeft.
+                currentRotation += -1 * deltaAngle + 0.0001;
+                self.camView!.layer.setValue(currentRotation, forKeyPath: "transform.rotation.z")
+                self.camView!.layer.frame = self.view.bounds
+            },
+            completion:
+            { (UIViewControllerTransitionCoordinatorContext) in
+                // Integralize the transform to undo the extra 0.0001 added to the rotation angle.
+                var currentTransform : CGAffineTransform = self.camView!.transform
+                currentTransform.a = round(currentTransform.a)
+                currentTransform.b = round(currentTransform.b)
+                currentTransform.c = round(currentTransform.c)
+                currentTransform.d = round(currentTransform.d)
+                self.camView!.transform = currentTransform
+        })
+    }
     
     func loadTheCamera(){
         //Cam stuff

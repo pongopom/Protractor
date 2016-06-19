@@ -46,7 +46,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3rk-Cy-XzG">
-                                <rect key="frame" x="73" y="30" width="45" height="45"/>
+                                <rect key="frame" x="67" y="30" width="45" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="45" id="WAh-Oz-aiI"/>
                                     <constraint firstAttribute="height" constant="45" id="z2v-ek-9lX"/>
@@ -92,17 +92,31 @@
                                     <action selector="swapViewControllers:" destination="BYZ-38-t0r" eventType="touchUpInside" id="99Q-sJ-zpi"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F7h-Yv-Cmj">
+                                <rect key="frame" x="114" y="30" width="45" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="45" id="6Mt-j9-SxE"/>
+                                    <constraint firstAttribute="height" constant="45" id="hHC-zH-JU4"/>
+                                </constraints>
+                                <state key="normal" image="unlocked"/>
+                                <connections>
+                                    <action selector="lockRotation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="twO-hk-3Tp"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="6eN-hp-kXn" secondAttribute="bottom" id="6LR-0B-Yz2"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="KTL-Hs-euN" secondAttribute="bottom" id="7wD-5P-rE5"/>
                             <constraint firstAttribute="trailingMargin" secondItem="KTL-Hs-euN" secondAttribute="trailing" constant="-20" id="Aic-j2-BSo"/>
                             <constraint firstItem="KTL-Hs-euN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="CIx-HF-Ag7"/>
-                            <constraint firstItem="3rk-Cy-XzG" firstAttribute="leading" secondItem="1Sy-6Q-9OK" secondAttribute="trailing" constant="8" id="DA7-Nt-lTe">
+                            <constraint firstItem="3rk-Cy-XzG" firstAttribute="leading" secondItem="1Sy-6Q-9OK" secondAttribute="trailing" constant="2" id="DA7-Nt-lTe">
                                 <variation key="widthClass=regular" constant="20"/>
                             </constraint>
                             <constraint firstAttribute="trailing" secondItem="6eN-hp-kXn" secondAttribute="trailing" id="Dag-OP-nVh"/>
                             <constraint firstItem="1Sy-6Q-9OK" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="10" id="EIM-R7-pSD">
+                                <variation key="widthClass=regular" constant="30"/>
+                            </constraint>
+                            <constraint firstItem="F7h-Yv-Cmj" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="10" id="FJw-0j-8tD">
                                 <variation key="widthClass=regular" constant="30"/>
                             </constraint>
                             <constraint firstItem="1Sy-6Q-9OK" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Ff3-HX-AnG"/>
@@ -111,6 +125,9 @@
                                 <variation key="widthClass=regular" constant="30"/>
                             </constraint>
                             <constraint firstItem="Uaw-2L-XTH" firstAttribute="leading" secondItem="13M-dl-QwN" secondAttribute="trailing" constant="5" id="GQT-kO-EXo"/>
+                            <constraint firstItem="F7h-Yv-Cmj" firstAttribute="leading" secondItem="3rk-Cy-XzG" secondAttribute="trailing" constant="2" id="HX9-Xr-6Mo">
+                                <variation key="widthClass=regular" constant="20"/>
+                            </constraint>
                             <constraint firstItem="6zz-JS-rdJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="N6d-h0-cuT"/>
                             <constraint firstAttribute="trailing" secondItem="KTL-Hs-euN" secondAttribute="trailing" id="Nyc-al-tgl"/>
                             <constraint firstItem="LUL-SK-hQt" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="10" id="RV5-q4-NxH">
@@ -175,7 +192,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1587" y="-1541"/>
+            <point key="canvasLocation" x="-1370.25" y="-1500"/>
         </scene>
         <!--Settings-->
         <scene sceneID="Aca-xf-Laq">
@@ -1074,7 +1091,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KP6-HO-vsi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-843" y="-1541"/>
+            <point key="canvasLocation" x="-555" y="-1552"/>
         </scene>
     </scenes>
     <resources>
@@ -1087,6 +1104,7 @@
         <image name="settings2xiphone" width="27" height="27"/>
         <image name="storex3" width="32" height="26"/>
         <image name="threesixty1" width="242" height="128"/>
+        <image name="unlocked" width="28" height="27"/>
     </resources>
     <color key="tintColor" red="0.073609070624799156" green="0.61829860695858507" blue="1" alpha="1" colorSpace="calibratedRGB"/>
 </document>
