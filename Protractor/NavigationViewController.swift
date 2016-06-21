@@ -84,7 +84,7 @@ class NavigationViewController: UIViewController
     @IBOutlet weak var swapViewControllersButton: UIButton!
     var oneEightyViewController: OneEightyViewController?
     var threeSixtyViewController: ThreeSixtyViewController?
-  //  var hasMakePurchase: Bool?
+  
     
     @IBOutlet weak var vCContainer: UIView!
     var viewsDictionary: NSDictionary!
@@ -96,13 +96,7 @@ class NavigationViewController: UIViewController
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         positionHorizonLineFor(self.loadedViewControllerName!)
-        ////////for screenshots remove befor shipping
-        
-        self.line.transform = CGAffineTransformMakeRotation(CGFloat(0.05))
-        self.line.backgroundColor = UIColor.redColor()
-        
-        ///////////
-       
+     
     }
     
     var isUpgradeViewShowing: Bool = false
@@ -124,7 +118,7 @@ class NavigationViewController: UIViewController
             self.startHorizontalGuide()
         }
         self.updateScaleTypeButtonImage()
-        self.storeButton.enabled = false
+        self.storeButton.hidden = true
         self.show360Button()
         self.showScalesButton()
        //REMOVE AND UNCOMENT ACTIVE NOTIFICATION AFTER TEST
@@ -398,7 +392,11 @@ class NavigationViewController: UIViewController
     
     func checkPermition(){
         if AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo) == AVAuthorizationStatus.Authorized {
-            self.loadTheCamera()
+            dispatch_async(dispatch_get_main_queue()) {
+                self.loadTheCamera()
+            }
+            
+           // self.loadTheCamera()
         }
         else if
             AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo) == AVAuthorizationStatus.NotDetermined {
@@ -406,8 +404,13 @@ class NavigationViewController: UIViewController
             AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo, completionHandler: { (videoGranted: Bool) -> Void in
                 // User clicked ok
                 if (videoGranted) {
-                    self.loadTheCamera()
-                 //   print("User tapped  allow")
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                         self.loadTheCamera()
+                    }
+                    
+                  
+                   // print("User tapped  allow")
                 } else {
                   //  print("User tapped dont allow")
                 }
@@ -415,11 +418,17 @@ class NavigationViewController: UIViewController
         }
         else if
             AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo) == AVAuthorizationStatus.Denied {
+            
+            
+            
+            dispatch_async(dispatch_get_main_queue()) {
+           
             let alertController = UIAlertController(title: "Unable to activate camera", message: "Check that Free Protractor has permission to use the camera in the device settings", preferredStyle: .Alert)
             let defaultAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
             alertController.addAction(defaultAction)
-            presentViewController(alertController, animated: true, completion: nil)
+           self.presentViewController(alertController, animated: true, completion: nil)
            // print("User deni")
+            }
         }
     }
     
@@ -523,7 +532,7 @@ class NavigationViewController: UIViewController
     func buyScale(){
         for product in list{
             let prodID = product.productIdentifier
-            if (prodID ==  "uk.co.pongosoft.Protractor.camera"){
+            if (prodID ==  "uk.co.pongosoft.Protractor.RadiansAndPercentages"){
                 p = product
                 buyProduct()
                 break;
@@ -551,7 +560,7 @@ class NavigationViewController: UIViewController
     func loadInAppPurchases(){
       //check if iap are allowed on this device
         if(SKPaymentQueue.canMakePayments()){
-            let productID:NSSet = NSSet(objects: "uk.co.pongosoft.Protractor.camera", "uk.co.pongosoft.Protractor.360")
+            let productID:NSSet = NSSet(objects: "uk.co.pongosoft.Protractor.RadiansAndPercentages", "uk.co.pongosoft.Protractor.360")
             let request: SKProductsRequest = SKProductsRequest(productIdentifiers: productID as! Set<String>)
             request.delegate = self
             request.start()
@@ -559,7 +568,7 @@ class NavigationViewController: UIViewController
         else{
             //iap not allowed
             self.showStoreView = "notAllowed"
-            self.storeButton.enabled = true
+            self.storeButton.hidden = false
         }
     }
     
@@ -568,7 +577,7 @@ class NavigationViewController: UIViewController
     func request(request: SKRequest, didFailWithError error: NSError) {
         self.showStoreView = "failed"
         self.requestError = error.localizedDescription
-        self.storeButton.enabled = true
+        self.storeButton.hidden = false
     }
     
     @IBOutlet weak var storeButton: UIButton!
@@ -629,8 +638,14 @@ class NavigationViewController: UIViewController
    //try reload purchases when app becomes active if it failed first time
     func applicationActive(notification: NSNotification) {
         if self.showStoreView != "passed"{
-            self.storeButton.enabled = false
-            self.loadInAppPurchases()
+            self.storeButton.hidden = true
+            
+            let triggerTime = (Int64(NSEC_PER_SEC) * 2)
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, triggerTime), dispatch_get_main_queue(), { () -> Void in
+               self.loadInAppPurchases()
+            })
+            
+            
         }
     }
 
@@ -645,7 +660,7 @@ class NavigationViewController: UIViewController
         let myProduct = response.products
         list = myProduct
         for product in myProduct{
-            if product.productIdentifier == "uk.co.pongosoft.Protractor.camera"{
+            if product.productIdentifier == "uk.co.pongosoft.Protractor.RadiansAndPercentages"{
                 self.scaleTitle = product.localizedTitle
                 self.scaleDescription = product.localizedDescription
                 let numberFormatter = NSNumberFormatter()
@@ -664,7 +679,7 @@ class NavigationViewController: UIViewController
             }
         }
         self.showStoreView = "passed"
-        self.storeButton.enabled = true
+        self.storeButton.hidden = false
     }
     
     func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
@@ -674,7 +689,7 @@ class NavigationViewController: UIViewController
             case.Purchasing:
                 let ID = transaction.payment.productIdentifier
                 switch ID{
-                case "uk.co.pongosoft.Protractor.camera":
+                case "uk.co.pongosoft.Protractor.RadiansAndPercentages":
                     self.userDefaults.setObject("purchasing", forKey: "ScaleState")
                     if (self.upgradeVC != nil) {
                         self.upgradeVC.priceType.text = "Purchasing"
@@ -696,7 +711,7 @@ class NavigationViewController: UIViewController
                 let ID = transaction.payment.productIdentifier
                 unlockProductForID(ID)
                 switch ID{
-                case "uk.co.pongosoft.Protractor.camera":
+                case "uk.co.pongosoft.Protractor.RadiansAndPercentages":
                     self.userDefaults.setObject("purchased", forKey: "ScaleState")
                     if (self.upgradeVC != nil) {
                         self.upgradeVC.priceType.text = "Purchased"}
@@ -717,7 +732,7 @@ class NavigationViewController: UIViewController
             case .Failed:
                 let ID = transaction.payment.productIdentifier
                 switch ID{
-                case "uk.co.pongosoft.Protractor.camera":
+                case "uk.co.pongosoft.Protractor.RadiansAndPercentages":
                     self.userDefaults.setObject("notPurchased", forKey: "ScaleState")
                     if (self.upgradeVC != nil) {
                         let showScales = self.userDefaults.valueForKey("ScaleP") as! Bool
@@ -770,7 +785,7 @@ class NavigationViewController: UIViewController
                     unlockProductForID(ID)
                     
                     switch ID{
-                    case "uk.co.pongosoft.Protractor.camera":
+                    case "uk.co.pongosoft.Protractor.RadiansAndPercentages":
                         self.userDefaults.setObject("purchased", forKey: "ScaleState")
                         if (self.upgradeVC != nil) {
                             self.upgradeVC.priceType.text = "Purchased"
@@ -795,16 +810,16 @@ class NavigationViewController: UIViewController
             case .Deferred:
                 let ID = transaction.payment.productIdentifier
                 switch ID{
-                case "uk.co.pongosoft.Protractor.camera":
+                case "uk.co.pongosoft.Protractor.RadiansAndPercentages":
                     self.userDefaults.setObject("deferred", forKey: "ScaleState")
                     if (self.upgradeVC != nil) {
-                        self.upgradeVC.priceType.text = "Waiting permission"}
+                        self.upgradeVC.priceType.text = "Awaiting permission"}
                     break
                     
                 case "uk.co.pongosoft.Protractor.360":
                     self.userDefaults.setObject("deferred", forKey: "Three60State")
                     if (self.upgradeVC != nil) {
-                        self.upgradeVC.price360.text = "Waiting permission"}
+                        self.upgradeVC.price360.text = "Awaiting permission"}
                     break
                     
                 default: break
@@ -822,7 +837,7 @@ class NavigationViewController: UIViewController
             self.userDefaults.setBool(true, forKey: "three60P")
             self.swapViewControllersButton.hidden = false
             break;
-        case "uk.co.pongosoft.Protractor.camera":
+        case "uk.co.pongosoft.Protractor.RadiansAndPercentages":
             self.userDefaults.setBool(true, forKey:  "ScaleP")
             self.scaleTypeButton.hidden = false
             break;

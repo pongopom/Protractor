@@ -28,7 +28,7 @@ class ThreeSixtyViewController: UIViewController {
           nc.addObserver(self, selector: #selector(ThreeSixtyViewController.updateProtractorType), name: "UpdateProtractorType", object: nil)
         self.updateTheUI()
          self.updateProtractorType()
-        self.angleReadOut = 270
+        self.angleReadOut = 250
     }
     
     let userDefaults = NSUserDefaults.standardUserDefaults()

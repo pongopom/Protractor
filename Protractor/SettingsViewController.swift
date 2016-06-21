@@ -181,22 +181,22 @@ class SettingsViewController: UITableViewController {
     }
 
     
-    
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-       
-        if tableView.cellForRowAtIndexPath(indexPath)!.tag == 10{
-           // https://userpub.itunes.apple.com/WebObjects/MZUserPublishing.woa/wa/addUserReview?id=337064413&type=Purple+Software
-            
-            let url = "itms-apps://itunes.apple.com/app/id\(555590467)"
-            UIApplication.sharedApplication().openURL(NSURL(string: url)!)
-            
-        }
-        if tableView.cellForRowAtIndexPath(indexPath)!.tag == 1{
-            
-        }
-        
-        
-    }
+//    
+//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//       
+//        if tableView.cellForRowAtIndexPath(indexPath)!.tag == 10{
+//           // https://userpub.itunes.apple.com/WebObjects/MZUserPublishing.woa/wa/addUserReview?id=337064413&type=Purple+Software
+//            
+//            let url = "itms-apps://itunes.apple.com/app/id\(555590467)"
+//            UIApplication.sharedApplication().openURL(NSURL(string: url)!)
+//            
+//        }
+//        if tableView.cellForRowAtIndexPath(indexPath)!.tag == 1{
+//            
+//        }
+//        
+//        
+//    }
     
     
     

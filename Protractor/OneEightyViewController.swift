@@ -27,7 +27,9 @@ class OneEightyViewController: UIViewController {
         self.view.addGestureRecognizer(self.fingerRotation)
         self.updateTheUI()
         self.updateProtractorType()
-        self.angleReadOut = 270
+       // self.angleReadOut = 270
+        
+        self.angleReadOut = 230
     }
     
     let userDefaults = NSUserDefaults.standardUserDefaults()

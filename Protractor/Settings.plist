@@ -7,15 +7,15 @@
 	<key>Three60State</key>
 	<string>notPurchased</string>
 	<key>three60P</key>
-	<true/>
+	<false/>
 	<key>ScaleP</key>
-	<true/>
+	<false/>
 	<key>ProtractorType</key>
 	<string>Deg</string>
 	<key>HideAngleType</key>
 	<false/>
 	<key>HideHorizon</key>
-	<false/>
+	<true/>
 	<key>HideAngle</key>
 	<false/>
 	<key>HideScale</key>
